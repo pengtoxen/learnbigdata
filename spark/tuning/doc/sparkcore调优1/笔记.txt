@@ -1,0 +1,207 @@
+一 HDFS二次开发性能提升和bug修复
+        我后面会单独在录制一节课
+        再添加一个性能提升的点或者是一个bug修复
+
+二 SparkCore的调优：
+    两次课，所以其实我们每天的内容还是很轻松。
+    1. 因为这个课非常重要。
+    2. 面试的重点
+    3. 企业里面在干活的时候，需要的一些重要的知识点。
+
+1. 在公司里面帮公司招大数据工程师，面试官
+2. 管理这些大数据的技术
+
+三  今天的可能可能跟之前有一些重复
+    今天上课的内容可能会跟之前你们学习过的内容有一些重复
+    不要着急，我们现在讲的是调优课，所以带有梳理课程的性质。
+================================================================
+
+1)RDD <Long,String> rdd1 = sc.xxxxx     =>rdd1
+      k    v
+2)RDD<String> rdd2=rdd1.map(_.2)      => rdd2
+
+=========================
+1)RDD <Long,String> rdd1 = sc.xxxxx     =>rdd1
+    rdd1.map(_2).flatmap(xx).reduceBykey
+
+
+
+val rdd1=sc.textFile(xxx).flatMap(xxx).map(xx).reduceBykey(xxx).map(xxx).cache()
+把这个RDD1的数据放入到内存里面。
+cache()是一个transformation的操作
+
+rdd1.filter(xxx).groupByKey(xx).foreach(xxx)  => 结果数据1
+foreach是一个action的操作
+
+再次使用者rdd1，其实是从内存里面去加载的数据，性能很好。
+rdd1.map(xxx).reduceBykey(xxx)  => 结果数据2
+
+（1）rdd.persist(MEMORY_ONLY)= cache()
+（2）rdd.persist(MEMORY_AND_DISK)
+ (3) rdd.persist(MEMORY_ONLY_SER) 序列化：
+     序列化了以后，数据的体积会变小。
+     5G  -> 4G
+     序列化 还是 反序列化都需要cpu资源
+（4）MEMORY_AND_DISK_SER
+（5）DISK_ONLY
+（6）MEMORY_ONLY_2, MEMORY_AND_DISK_2（基本就不需要，没人这样用）
+
+
+
+单词计数：
+sc.textFile(xxx).flatMap(xxx).map(xxx).reduceByKey(xxx).foreach(println(_))
+
+reduceByKey:就是一个shuffle的操作（MR里面的shuffle就是一个意思）
+
+如果发生shuffle，性能会急剧的下降：
+    1）是不是就以为有数据要写磁盘
+            这个事，肯定是比较耗费时间
+    2）是不是以为不同的服务器之间要复制数据（传输数据）
+            网络资源
+回忆一下：
+    MR：
+        map  -》 shuffle -》   reduce
+
+在spark的作业里面，能不适用shuffle算子的，就不要去使用。
+我们常见的算子里面哪些是shuffle类的算子呢？
+1. join
+2. reduceByKey(xx)
+3. groupByKey(xx)
+4. xxxxByKey()  都是suffer类的操作。
+5. distinct
+6. repartition
+
+======================
+rdd1.join(rdd2)
+(k,v)      join(k,v)       =》
+1,令狐冲        1，华山派                  1，令狐冲，华山派
+2,任我行        2, 日月神教                2, 任我行，日月神教
+
+这个需求我们可以不用join
+
+val  rdd1data=rdd1.collect().toMap();
+val  rdd1databraodcast=sc.broadcast(rdd1data)
+//这样使用了以后就不会发生shuffle了，当然也不会发生数据倾斜
+//数据倾斜一般是发生在shuffle里面的，但是这儿连shuffle操作都没有，所以不会数据倾斜。
+rdd2.map{ record =>{
+        val rdd1map=rdd1databraodcast.value.toMap();
+        val name= rdd1map(record._1)
+        (record._1,name,record_2)
+}
+}
+
+
+======================================
+告诉大家面试的是，作为我，MR的运行流程我是一定会问的。
+MR代表了一个分布式计算的模型，我个人认为如果，能把MR能掌握得好
+其实再去学其他的分布式计算模型，都是很容易的。
+其实现在在企业里面说实话，使用MR开发的情况不是很多，几乎不用。
+但是MR的运行流程，面试的时候仍然是一个重点。
+
+Flink storm  -》 MR
+
+
+我不知道大家发现没有，大数据的开发很容易，比ssh ssm 这些还要容易
+1. MR
+        map
+        reduce
+2. hive
+    sql
+3. spark 
+    map flatmap  redueByeky  fileter xxxx
+
+所以这些大数据技术其实是很容易去使用的，如果大家赶紧很容易去使用，那其他人其实也是
+这样赶感觉的。但是大数据工程师的工资还不低。
+是因为大数据的理论知识比较多，而且在企业里面进行大数据开发的时候，其实你开发的程序
+很容易出问题，来不来就是内存溢出，数据倾斜，运行时间很长（超过了大家都不能忍受的时间）
+    然后还有各种莫名其妙的异常，task lost  timeout  file lost gc紧张
+
+要解决这些问题，就需要很扎实的基础，能充分的理解这些大数据的原理
+然后才能去解决这些问题，但是理解这些大数据技术的原理，不容易，而且
+难度也不小，还有如果没有人带的话，其实很多人知识掌握都是一些零碎的点而已
+连不起来，所以自己误以为自己会很多技术，但是发现，出了什么问题，什么问题都解决不了。
+
+美团写的  -》 国内比较早使用spark -》 出了很多问题，就是靠我们现在讲的这些去解决问题的
+《APP用户行为分析系统》数据量很大 -》 各种乱七八糟的问题就出来。
+
+你使用过哪些SparkCore算子，一旦长时间不用，这么简单的问题，也是回答不出来的。
+
+==============================
+rdd1：10万
+rdd1.map（ Word=>{
+    拉取到的一条数据
+    你针对的是一条数据一条数据的处理
+    把数据写入到MySQL数据库
+}）
+rdd1：10万 -》 10 partition =》 每个partition 1万条数据
+rdd1.mapPartitions( partition =>{
+    插入MySQL的时候，就可以进行批处理了
+    每次插入一万条数据，插入10次就可以了，性能就上来了。MySQL的压力就下来了。
+})
+
+进行重分区，多搞几个分区  -》 20  -》 5000
+
+重分区：
+ 分区多  -》 分区变少  coalesce
+
+ 分区少  -》 分区变多  reparation
+
+ coalesce 和 reparation的区别，如果不知道的同学可以下去查一查。
+
+
+ rdd -》 先要进行重分区repartition，重分区了以后，你还想对分区里面的数据进行sort
+ rdd.repartitionAndSortWithinPartitions
+
+class Student{
+    id int,
+    String name;
+}
+Student stduent1=new Stduent(xx); 16
+Student stduent2=new Stduent(xx); 16
+
+Student stduent3=new Stduent(xx); 16   =>48
+
+100个对象  1600字节
+
+{{id:1,name:"zhangsan"},{id:1,name:"lisi"}}  -> 40
+
+
+
+我们要对这5个级别要进行调优，调优的目的是为了
+尽可能的让我们的task分配在前三种情况里面。
+
+
+Spark的官方网站是写得很好的一个网站，所以肯定是值得大家去看的。
+
+
+
+难度不小：
+（1）Spark内存模型  -》 Executor调优
+    你自己上网看的话，一个是你拿不准
+    所以我们统一讲一下，而且感觉的公司里面的经验
+    很多情况下，报 file lost  timeout ,task lost ,heabeat timeout
+    就的靠你去条内存模型。
+（2）数据倾斜（面试的重点）
+     你在工作里面遇到过什么问题吗？怎么解决的？（几乎必问）
+        也是工作里面经常遇到问题
+
+        系统
+        你有可能看不懂
+        给你一个套路
+（3）Spark Shuffle原理
+    Spark的shuffle发生过了很多次的变化
+
+预计下次课3个小时。
+
+
+
+
+
+
+
+
+
+
+
+
+

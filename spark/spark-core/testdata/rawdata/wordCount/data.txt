@@ -1,0 +1,3 @@
+hadoop hive hbase
+flink hadoop sqoop
+spark yarn hdfs

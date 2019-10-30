@@ -1,0 +1,87 @@
+def main{
+val conf=new SparkConf(); //第一句代码，其实不太重要，就是配置一些参数而已
+val sc=new SparkContext(conf)；//重要的是这段代码，大家要知道，刚刚我说的那5个流程都是在这段代码里面完成的。
+1. 启动了driver
+2. 启动 D T
+3. 申请资源，并且分配了资源
+
+sc.textFile(xxx).flatMap(xxx).map(xxx).reduceByKey(xx).foreach(println(_))
+
+Transformation:
+	具有lazy特性，也就是说其实代码不会真正的运行。
+Action：
+	foreach代码会运行，启动会启动一个Job任务。
+	只有当遇到一个action算子的时候代码才会被真正的运行。
+
+}
+
+RDD（partition）
+Spark UI
+Application：
+	Job：
+		Stage的划分（宽依赖）：
+		State0:
+			Task1（一个partition就对应一个task任务）
+			Task2
+			Task3
+  			3个task
+
+			Shuffle(宽依赖)
+		State1:
+			2个task
+			
+	Job：
+
+
+以前我讲完spark的课，有同学问我老师，能把能告诉我一个公式，或者一个模版，我提交任务的时候要使用。
+因为我现在虽然知道了，怎么开发代码，怎么提交任务命令我也知道，但是不是说提交任务的时候，要设计
+executor的个数？memory？cpu core？
+
+
+./bin/spark-submit \
+  --master yarn-cluster \
+  --num-executors 100 \
+  --executor-memory 6G \
+  --executor-cores 4 \
+  --driver-memory 1G \
+  --conf spark.default.parallelism=1000 \
+  --conf spark.storage.memoryFraction=0.5 \
+  --conf spark.shuffle.memoryFraction=0.3 \
+
+
+ --master yarn-cluster 
+这个参数大家已经要注意，因为不同的spark的版本，这个参数不一样。大家提交任务的时候，一定要关心你提交的集群的spark是什么版本
+然后根据那个版本来看这个参数应该怎么设置
+
+spark1.5
+
+
+
+如何定位数据倾斜是哪个代码导致的？
+
+为什么要给你讲课要讲stage划分原理  -》 是不是就可以找到哪个算子出点问题了吗？
+Application:
+		job0(action)
+				Stage1:
+						task1
+						task2
+						task3:
+							运行时间（几分钟，几个小时） 数据倾斜了
+				stage2:
+		job1(action)
+
+
+val sampledPairs = pairs.sample(false, 0.1)
+
+val sampledWordCounts = sampledPairs.countByKey()
+sampledWordCounts.foreach(println(_))
+通过采样，不就可以观察到哪些key出现到次数多，这样的话，我们就可以知道是哪个key出现的问题了
+
+
+
+
+
+
+
+
+
