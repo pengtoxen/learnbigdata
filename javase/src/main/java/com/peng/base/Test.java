@@ -12,7 +12,7 @@ public class Test {
         change(p);
     }
 
-    public static void change(Person p) {
+    private static void change(Person p) {
         //p指向对象p
         System.out.println(p);
         //新建对象p1
@@ -24,9 +24,9 @@ public class Test {
 }
 
 class Person {
-    String name;
+    private String name;
 
-    public Person(String name) {
+    Person(String name) {
         this.name = name;
     }
 }
