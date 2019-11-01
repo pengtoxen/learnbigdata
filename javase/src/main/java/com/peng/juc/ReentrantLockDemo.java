@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * 1.一个线程可以多次获得同一个锁
  * 2.lock()方法可获得锁
  * 3.tryLock()方法可尝试获取锁并指定超时
- *
+ * <p>
  * 总结
  * 1.ReentrantLock可以替代synchronized
  * 2.ReentrantLock获取锁更安全
