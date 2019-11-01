@@ -1,4 +1,4 @@
-package com.peng.dateformat;
+package com.peng.date.dateformat;
 
 import org.junit.Test;
 
