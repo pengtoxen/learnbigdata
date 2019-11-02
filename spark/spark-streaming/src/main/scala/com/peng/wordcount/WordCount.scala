@@ -10,7 +10,7 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 object WordCount {
     def main(args: Array[String]): Unit = {
         //1 创建SparkConf对象
-        val conf: SparkConf = new SparkConf().setAppName("NetworkWordCount").setMaster("local[2]")
+        val conf: SparkConf = new SparkConf().setAppName("NetworkWordCount").setMaster("local[*]")
         //2 创建StreamingContext对象
         val ssc: StreamingContext = new StreamingContext(conf, Seconds(1))
         //3 获取数据流
