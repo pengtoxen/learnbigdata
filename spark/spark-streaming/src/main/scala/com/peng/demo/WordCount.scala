@@ -1,4 +1,4 @@
-package com.peng.wordcount
+package com.peng.demo
 
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.{DStream, ReceiverInputDStream}
@@ -10,7 +10,7 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 object WordCount {
     def main(args: Array[String]): Unit = {
         //1 创建SparkConf对象
-        val conf: SparkConf = new SparkConf().setAppName("NetworkWordCount").setMaster("local[*]")
+        val conf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("NetworkWordCount")
         //2 创建StreamingContext对象
         val ssc: StreamingContext = new StreamingContext(conf, Seconds(1))
         //3 获取数据流
@@ -23,6 +23,7 @@ object WordCount {
         wordCounts.print()
         //6 启动任务
         ssc.start()
+        //等待计算结束
         ssc.awaitTermination()
         ssc.stop()
     }
