@@ -1,13 +1,10 @@
-package com.peng.demo
+package com.peng.wordcount
 
 import org.apache.spark.SparkConf
 import org.apache.spark.streaming.dstream.{DStream, ReceiverInputDStream}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 
-/**
-  * 单词统计
-  */
-object WordCount {
+object WordCountDriver {
     def main(args: Array[String]): Unit = {
         //1 创建SparkConf对象
         val conf: SparkConf = new SparkConf().setMaster("local[*]").setAppName("NetworkWordCount")
