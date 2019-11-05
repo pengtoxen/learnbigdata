@@ -2,12 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- 模型版本。maven2.0必须是这样写，现在是maven2唯一支持的版本 -->
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- 公司或者组织的唯一标志，并且配置时生成的路径也是由此生成， 如com.winner.trade，maven会将该项目打成的jar包放本地路径：/com/winner/trade -->
     <groupId>com.peng</groupId>
+    <!-- 本项目的唯一ID，一个groupId下面可能多个项目，就是靠artifactId来区分的 -->
     <artifactId>spark</artifactId>
+    <!-- 本项目目前所处的版本号 -->
     <version>1.0-SNAPSHOT</version>
     <!-- 表明当前项目是一个父项目，没有具体代码，只有声明的共有信息 -->
+    <!-- 打包的机制，如pom,jar, maven-plugin, ejb, war, ear, rar, par，默认为jar -->
     <packaging>pom</packaging>
 
     <!-- 声明公有的属性 -->
@@ -62,34 +67,97 @@
             <!-- 为避免这种情况,可以设置scope=provided,那么在服务器执行的时候,不会用我们打包进去的依赖,-->
             <!-- 而会用服务器中依赖-->
             <!-- <scope>provided</scope>-->
+            <!-- maven认为，程序对外部的依赖会随着程序的所处阶段和应用场景而变化，所以maven中的依赖关系有作用域(scope)的限制。 -->
+            <!--scope包含如下的取值：compile（编译范围）、provided（已提供范围）、runtime（运行时范围）、test（测试范围）、system（系统范围） -->
+            <!-- 设置指依赖是否可选，默认为false,即子项目默认都继承:为true,则子项目必需显示的引入，与dependencyManagement里定义的依赖类似  -->
+            <optional>false</optional>
+            <!-- 屏蔽依赖关系。 比如项目中使用的libA依赖某个库的1.0版，libB依赖某个库的2.0版，现在想统一使用2.0版，就应该屏蔽掉对1.0版的依赖 -->
+            <exclusions>
+                <!-- <exclusion>-->
+                <!-- <groupId>org.slf4j</groupId>-->
+                <!-- <artifactId>slf4j-api</artifactId>-->
+                <!-- </exclusion>-->
+            </exclusions>
         </dependency>
     </dependencies>
 
     <!-- 配置构建信息 -->
     <build>
+        <!-- pluginManagement是表示插件声明，即你在项目中的pluginManagement下声明了插件，Maven不会加载该插件，pluginManagement声明可以被继承。-->
+        <!-- pluginManagement一般是用来在父POM中定义，提供给子POM使用，子POM也可以覆盖这个定义，而且你在父POM中定义了版本之后，-->
+        <!-- 子模块中直接应用groupId和artifactId，而不用指定版本，同时也方便统一管理；而在父POM中的pluginManagement并不会介入到Maven的生命周期。-->
+        <!-- plugins就是直接引入一个plugin，而且可以绑定到Maven相关的生命周期上。-->
+        <!-- pluginManagement主要是为了统一管理插件，确保所有子POM使用的插件版本保持一致，类似dependencies和dependencyManagement。-->
+        <pluginManagement>
+            <plugins>
+                <!-- 用于编译Scala代码到class -->
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>3.2.2</version>
+                    <executions>
+                        <execution>
+                            <id>scala-compile-first</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>add-source</goal>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>scala-test-compile</id>
+                            <phase>process-test-resources</phase>
+                            <goals>
+                                <goal>testCompile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- 设置项目的编译版本 -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.1</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <!-- 声明并引入构建的插件 -->
         <plugins>
-            <!-- 设置项目的编译版本 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.6.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-            <!-- 用于编译Scala代码到class -->
-            <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>scala-maven-plugin</artifactId>
-                <version>3.2.2</version>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
                 <executions>
                     <execution>
+                        <phase>package</phase>
                         <goals>
-                            <goal>compile</goal>
-                            <goal>testCompile</goal>
+                            <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

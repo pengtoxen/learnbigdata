@@ -1,0 +1,216 @@
+SparkStreaming：
+	1. 核心的抽象 DStream
+	2. 程序入口：
+		new SteramingContext(conf,Seconds(1))
+
+		block interval:
+			200ms -> block
+		batch interval:
+			用户自己配置
+
+第一个要明白的东西：
+实时计算引擎：
+Storm:
+	是真正意义上的实时处理，真的是来一条数据处理一条数据，低延迟，低吞吐量
+SparkStreaming：
+	不是真正意义上的实时处理，我们把它理解为准实时处理，微批处理。
+Flink:
+	是真正意义上的实时处理，可以来一条数据就处理一条数据。
+第二个要搞明白的东西：
+我们SparkStremaing是基于SparkCore
+SparkStreaming运行起来以后，就针对RDD进行处理，所以我们会看到对以前RDD能使用的算子，对于DStream同样也可以使用。
+第三个要搞明白的东西：
+streaming程序获取到的数据源就是一个DStream,然后其实我们编程就是针对这个DSTream进行的操作。
+第四个要搞明白的东西：
+大家会发现，无论是我给大家课件，或者是我上课演示的版本，或者是上课给大家看的SparkStremaing官网的版本，或者是我的虚拟机里面搭建的SparkStreaming的版本，可能都不一样，那这个会有影响吗？
+一点都不影响。
+SparkStremaing到了Spark2.x以后，机会源码就没改过，所以你用那个版本无所谓，看哪个版本的官网也所谓，为什么呢？都是一模一样。
+
+如果说非要给大家推荐一个Spark的版本，那么我推荐Spark2.3.3这个版本，如果你们公司要新建Spark集群，那么我推荐使用这个版本。
+这个版本是比较稳定的一个版本的。
+Spark2.3 就是一个比较稳定的版本。
+Spark2.3.1
+spark2.3.2
+Spark2.3.3
+
+如果不出意外的话，我们不会有spark2.5，如果有的话，应该直接是spark3了
+第五个要搞明白的东西：
+SparkStreaming默认的持久化的级别是StorageLevel.MEMORY_AND_DISK_SER_2
+
+
+
+实时的任务：
+	1. 数据的输入
+		1.1 socket（讲课的时候，练习的时候使用，非常方便）
+		1.2 HDFS的数据源（这个应用场景不是很多，大家知道就可以）
+		1.3 flume（我们不讲，因为不是特别的重要，是我故意不讲，我要把布置成作业）
+		1.4 kafka 最最核心的一个数据源，只不过我们现在还不讲，因为非常重要，所以我们要下一次课再讲。
+		1.5 自定义数据源
+			用户不是特别的多，但是保不齐会用到。
+	2. 数据的处理
+	 	2.1 updateStateBykey
+	 			updateFunc: (Seq[V], Option[S]) => Option[S]
+	 		这个我们在公司里面也使用，然后我们发现官方网站也给我们写的就是updateStateBykey
+	 	2.2 mapWithState
+	 		这个算子在官方网站上面没有介绍，所以很多人不知道这个算子。但是我告诉大家，在Spark的源码里面
+	 		kafka:
+	 			examples:
+	 				里面演示的consumer  producer如何使用？
+	 		Spark:
+	 			examples：
+	 				里面演示了一个算子mapWithState
+	 				这个算子在spark1.6以后才出现的，我们可以理解就是就是对UpdateStateBykey
+	 				的优化，性能要比UpdateStateBykey要好，好很多倍。所以Spark的官方博客推荐使用
+	 				的是mapWithState
+	 	2.3 transform
+	 		 最大的意义在于可以把 DStream -> RDD -> SparkSQL( RDD -> DataFrame/DataSet -> table -> SQL)
+	 		 DStream -> RDD. -> DataSet/DataFrame -> Table -> SQL
+	 		 所以你会发现，我们可以用SQL语句去处理实时的任务。然后会发现
+	 		 DStream RDD DataFrame/DataSet 之间可以进行无缝的切换。 
+	 		 		这样的一个架构设计就比较牛了！！
+	 		Hadoop：
+	 			MR
+	 			Hive
+	 			Storm
+	 		人家Spark把离线处理，实时处理，图计算，机器学习，都无缝整合在一起了。
+	 	2.4 widow 窗口操作
+	 		我们现在能解决的问题就是：
+	 			a. 对当前批次进行处理，统计，计算
+	 			b. 对历史的结果的进行累积，累加
+
+	 		如果现在有这样的一个需求：
+	 		每隔4秒统计一下最近6秒的单词出现的次数。
+
+
+	 		这个图不好画，这个事其实很好想，我就想这样去统计。
+	 		每隔4秒统计一次，然后最近6秒的情况。
+
+
+	3. 数据的输出
+		3.1 print 
+			只能是测试的时候的时候，实际开发项目的时候，你也会用，但是只是用在测试的时候，真正项目上线，不可能就是
+			把结果打印出来。
+		3.2 saveAsxxxx（string path）
+			基本就是不会用。不会存到文件系统里面。
+			文件格式一样，感兴趣的同学你可以去看一下 有什么不一样。但是不敢兴趣就算了，基本就不用。
+		3.3 foreacheRDD(企业里面就使用的这个)
+			一定要掌握
+
+
+		RDD:
+			transform的操作：
+				map
+				mapMpartition(parttion)
+			action的操作：
+				foreach
+				foreachPartion( partition)
+		DStream
+			transform的操作：
+				transform (rdd)->  mapMpartition
+			action的操作：
+				foreachRDD (rdd)->  foreachPartion
+
+
+		dstream.foreachRDD { rdd =>
+		  
+		  val connection = createNewConnection()  // executed at the driver. hadoop1. -> hadoop2
+		  //就需要序列化，但是Mysql的连接不支持序列化，所以这这个代码压根就不能运行
+
+
+		  rdd.foreach { record =>
+		    connection.send(record) // executed at the worker（executor）. hadoop2
+  }
+}
+
+如何把SparkStreaming程序提交到集群去运行？
+跟之前SparkCore到编程是一模一样的，大家一定要自己下去提交一下，提示大家注意几点：
+1. 提交到集群上面运行到时候，记得要注释这个代码：
+	 //conf.setMaster("local[2]")
+2. 记得配置pom.xml文件
+<build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>net.alchim31.maven</groupId>
+                    <artifactId>scala-maven-plugin</artifactId>
+                    <version>3.2.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.5.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>scala-compile-first</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>scala-test-compile</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+  3. 编写脚本，把任务提交大集群
+  	提交大方式跟之前的任务是一模一样。
+
+
+
+
+
+
