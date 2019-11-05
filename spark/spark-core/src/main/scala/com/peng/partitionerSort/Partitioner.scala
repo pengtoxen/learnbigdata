@@ -19,7 +19,7 @@ object Partitioner extends App {
 	val result: RDD[Int] = sorted.map(x => x._1)
 	result.foreach(println)
 	//7.保存结果数据到文件
-	result.saveAsTextFile("./spark-core/testdata/output/partitionerSort")
+	result.saveAsTextFile("spark-core/testdata/output/partitionersort")
 	//8.关闭sparkContext
 	sc.stop()
 }

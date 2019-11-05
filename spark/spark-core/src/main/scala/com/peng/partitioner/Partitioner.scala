@@ -16,7 +16,7 @@ object Partitioner extends App {
 	//5.对应上面的rdd数据进行自定义分区
 	val result = wordLengthRDD.partitionBy(new MyPartitioner(4))
 	//6.保存结果数据到文件
-	result.saveAsTextFile("./spark-core/testdata/output/partitioner")
+	result.saveAsTextFile("spark-core/testdata/output/partitioner")
 	//7.关闭sparkContext
 	sc.stop()
 }

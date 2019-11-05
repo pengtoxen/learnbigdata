@@ -11,7 +11,7 @@ object WordCountForHDFS {
         val ssc = new StreamingContext(conf, Seconds(1))
         //hadoop fs -put a.txt /hello
         //hadoop fs -put b.txt /hello
-        val hdfsDStream = ssc.textFileStream("hdfs://kka/hello/")
+        val hdfsDStream = ssc.textFileStream("hdfs://peng/hello/")
 
         val result = hdfsDStream.flatMap(_.split(","))
             .map((_, 1))

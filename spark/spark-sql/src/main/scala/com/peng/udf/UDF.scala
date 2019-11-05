@@ -14,7 +14,7 @@ object UDF extends App {
     //2 创建SparkSession对象
     val spark: SparkSession = SparkSession.builder().config(sparkConf).getOrCreate()
     //2 构建数据源生成DataFrame
-    val jsonDF: DataFrame = spark.read.json("./spark-sql/testdata/rawdata/saveResult/data.json")
+    val jsonDF: DataFrame = spark.read.json("spark-sql/testdata/rawdata/saveResult/data.json")
     //3 注册成表
     jsonDF.createTempView("udf")
     //4 实现自定义UDF函数

@@ -18,7 +18,7 @@ object Tuning2 {
         val sc = new SparkContext(sparkConf)
         //读取数据文件
         //需要对名为“data.txt”的HDFS文件进行一次map操作，再进行一次reduce操作。也就是说，需要对一份数据执行两次算子操作。
-        val path = "F:\\learnbigdata\\spark\\tuning\\testdata\\rawdata\\data.txt"
+        val path = "tuning/testdata/rawdata/data.text"
 
         sc.stop()
     }

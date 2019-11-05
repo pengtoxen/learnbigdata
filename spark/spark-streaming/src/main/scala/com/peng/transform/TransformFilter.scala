@@ -44,7 +44,7 @@ object TransformFilter {
         //广播变量
         val filterRDDBroadCast = sc.broadcast(filterRDD.collect())
 
-        val dataStream = ssc.socketTextStream("localhost", 8888)
+        val dataStream = ssc.socketTextStream("localhost", 9999)
         val wordDStream = dataStream.flatMap(_.split(","))
         val wordAndOneDStream: DStream[(String, Int)] = wordDStream.map((_, 1))
         //进行黑名单过滤

@@ -2,21 +2,23 @@ package com.peng.foreachrdd
 
 import java.sql.DriverManager
 
+import org.apache.spark.streaming.dstream.{DStream, ReceiverInputDStream}
 import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.{SparkConf, SparkContext}
 
 /**
   * 核心算子：foreachRDD
+  * 类似于mapPartition函数,可以对每个rdd进行操作
   */
 object WordCountForeachRDD {
     def main(args: Array[String]) {
         //做单词计数
-        val sparkConf = new SparkConf().setAppName("WordCountForeachRDD").setMaster("local[2]")
-        val sc = new SparkContext(sparkConf)
-        val ssc = new StreamingContext(sc, Seconds(2))
-        val lines = ssc.socketTextStream("localhost", 8888)
-        val words = lines.flatMap(_.split(" "))
-        val wordCounts = words.map(x => (x, 1)).reduceByKey(_ + _)
+        val sparkConf: SparkConf = new SparkConf().setAppName("WordCountForeachRDD").setMaster("local[2]")
+        val sc: SparkContext = new SparkContext(sparkConf)
+        val ssc: StreamingContext = new StreamingContext(sc, Seconds(2))
+        val lines: ReceiverInputDStream[String] = ssc.socketTextStream("localhost", 8888)
+        val words: DStream[String] = lines.flatMap(_.split(" "))
+        val wordCounts: DStream[(String, Int)] = words.map(x => (x, 1)).reduceByKey(_ + _)
 
         //将结果保存到Mysql(一) 这句代码是不能运行的
         wordCounts.foreachRDD { (rdd, time) =>
@@ -178,5 +180,4 @@ object WordCountForeachRDD {
         //等待Streaming程序终止
         ssc.awaitTermination()
     }
-
 }

@@ -33,13 +33,13 @@ object WordCountByMapWithState {
         val ssc = new StreamingContext(conf, Seconds(1))
         //这儿要记得设置一个checkpoint目录
         //建议这儿目录设置为HDFS的目录
-        ssc.checkpoint("/spark/spark-streaming/wordcount/checkpoint")
+        ssc.checkpoint("spark-streaming/testdata/checkpoint/mapwithstate")
 
         val initialRDD = ssc.sparkContext.parallelize(List(("hive", 100), ("hadoop", 200)))
 
         //步骤二：获取数据
         //DStream -> RDD RDD RDD RDD -> 数据流
-        val dataDStream = ssc.socketTextStream("localhost", 8888, StorageLevel.MEMORY_AND_DISK_SER)
+        val dataDStream = ssc.socketTextStream("localhost", 9999, StorageLevel.MEMORY_AND_DISK_SER)
 
         //2. 数据的处理
         //步骤三 对数据进行处理
