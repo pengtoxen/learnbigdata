@@ -13,16 +13,15 @@ public class ConsumerTest {
         //步骤一：设置参数
         Properties props = new Properties();
         props.put("bootstrap.servers", "hadoop1:9092");
-        props.put("group.id", "testkaikeba");
+        props.put("group.id", "peng");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
-        //不要设置得太长，不然coordinator服务器不太容易发现 你的
+        //不要设置得太长，不然coordinator服务器不太容易发现你的
         //消费宕机了。
-        props.put("heartbeat.interval.ms",1000);
+        props.put("heartbeat.interval.ms", 1000);
         //多久没发送心跳认为超时
         props.put("session.timeout.ms", 10 * 1000);
-
 
         props.put("max.poll.interval.ms", 30 * 1000); // 如果30秒才去执行下一次poll
         // 如果说你的消费的吞吐量特别大，此时可以适当提高一些
@@ -37,7 +36,7 @@ public class ConsumerTest {
         props.put("auto.commit.ineterval.ms", "1000");
 
         // 每次重启都是从最早的offset开始读取，不是接着上一次
-        /**
+        /*
          *
          * earliest
          * 		当各分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费
@@ -67,18 +66,15 @@ public class ConsumerTest {
             while (true) {
                 //步骤四：不断的消费数据
                 ConsumerRecords<String, String> records = consumer.poll(3000); // 超时时间
-                    //步骤五：对消费到的数据，进行业务的处理。一次消费多条数据。
+                //步骤五：对消费到的数据，进行业务的处理。一次消费多条数据。
                 for (ConsumerRecord<String, String> record : records) {
                     JSONObject order = JSONObject.parseObject(record.value());
-                    System.out.println(order.toString() + " ,userId "+order.getString("userId"));
+                    System.out.println(order.toString() + " ,userId " + order.getString("userId"));
                 }
             }
         } catch (Exception e) {
 
         }
-
-
     }
-
 }
 

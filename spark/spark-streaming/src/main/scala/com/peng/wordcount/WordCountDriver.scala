@@ -23,7 +23,6 @@ object WordCountDriver {
           *
           * DStream
           *
-          *
           * you,jump
           * i,jump
           *
