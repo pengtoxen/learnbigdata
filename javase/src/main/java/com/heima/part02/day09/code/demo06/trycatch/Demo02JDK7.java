@@ -1,4 +1,4 @@
-package com.itheima.demo06.trycatch;
+package com.heima.part02.day09.code.demo06.trycatch;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

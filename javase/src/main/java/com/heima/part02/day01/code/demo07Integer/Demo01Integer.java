@@ -1,4 +1,4 @@
-package com.itheima.demo07Integer;
+package com.heima.part02.day01.code.demo07Integer;
 /*
     装箱:把基本类型的数据,包装到包装类中(基本类型的数据->包装类)
         构造方法:

@@ -1,4 +1,4 @@
-package com.itheima.demo07Integer;
+package com.heima.part02.day01.code.demo07Integer;
 
 import java.util.ArrayList;
 

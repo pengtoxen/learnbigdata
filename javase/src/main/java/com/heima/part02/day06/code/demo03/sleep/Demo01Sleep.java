@@ -1,4 +1,4 @@
-package com.itheima.demo03.sleep;
+package com.heima.part02.day06.code.demo03.sleep;
 /*
     public static void sleep(long millis):使当前正在执行的线程以指定的毫秒数暂停（暂时停止执行）。
     毫秒数结束之后,线程继续执行

@@ -1,4 +1,4 @@
-package com.itheima.demo06StringBuilder;
+package com.heima.part02.day01.code.demo06StringBuilder;
 /*
     StringBuilder和String可以相互转换:
         String->StringBuilder:可以使用StringBuilder的构造方法

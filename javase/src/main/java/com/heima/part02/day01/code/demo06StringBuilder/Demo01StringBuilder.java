@@ -1,4 +1,4 @@
-package com.itheima.demo06StringBuilder;
+package com.heima.part02.day01.code.demo06StringBuilder;
 /*
     java.lang.StringBuilder类:字符串缓冲区,可以提高字符串的效率
     构造方法:

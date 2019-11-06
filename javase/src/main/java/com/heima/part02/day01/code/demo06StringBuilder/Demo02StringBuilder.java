@@ -1,4 +1,4 @@
-package com.itheima.demo06StringBuilder;
+package com.heima.part02.day01.code.demo06StringBuilder;
 /*
     StringBuilder的常用方法:
         public StringBuilder append(...)：添加任意类型数据的字符串形式，并返回当前对象自身。
