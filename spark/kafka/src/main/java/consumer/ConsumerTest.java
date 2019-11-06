@@ -15,9 +15,13 @@ public class ConsumerTest {
     public static void main(String[] args) {
         //步骤一：设置参数
         Properties props = new Properties();
+        //定义kakfa 服务的地址，不需要将所有broker指定上
         props.put("bootstrap.servers", "hadoop1:9092");
+        //制定consumer group
         props.put("group.id", "peng");
+        //key的序列化类
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+        //value的序列化类
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
         //不要设置得太长，不然coordinator服务器不太容易发现你的
@@ -57,8 +61,10 @@ public class ConsumerTest {
         props.put("auto.offset.reset", "latest");
         //步骤二：创建消费者
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
+
+        //消费者订阅的topic, 可同时订阅多个
         //步骤三：指定消费的主题
-        consumer.subscribe(Arrays.asList("peng"));
+        consumer.subscribe(Arrays.asList("peng","peng2"));
 
         try {
             while (true) {

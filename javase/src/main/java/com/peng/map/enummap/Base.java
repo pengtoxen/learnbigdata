@@ -1,4 +1,4 @@
-package com.peng.map.enumMap;
+package com.peng.map.enummap;
 
 import org.junit.Test;
 

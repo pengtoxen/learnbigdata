@@ -1,4 +1,4 @@
-package com.peng.map.hashMap;
+package com.peng.map.hashmap;
 
 import org.junit.Test;
 
