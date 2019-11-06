@@ -7,6 +7,9 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 
 import java.util.Properties;
 
+/**
+ * @author Administrator
+ */
 public class ProducerDemo {
     public static void main(String[] args) throws Exception {
         /*
@@ -127,14 +130,14 @@ public class ProducerDemo {
          *  key跟我们要把这个消息发送到这个主题的哪个分区有关系
          *  比如：peng:
          *          p0:
-         *              leader parttiion    <-  ,follower partition
+         *              leader partition    <-  ,follower partition
          *          p1:
-         *              leader paertition   <-  ,follower partition
+         *              leader partition   <-  ,follower partition
          * （1）不指定key
          *          发送的一条消息，会以轮询的方式 发送到分区里面。(要么就是轮询，要么随机)
          *          Hadoop   p0
-         *          flink    p1
-         *          hbase    p0
+         *          Flink    p1
+         *          Hbase    p0
          *          hadoop   p1
          * （2）如果指定key
          *       test 取这个key的hash值   数字 3
@@ -147,8 +150,7 @@ public class ProducerDemo {
          *       一定会被发送到同一个分区。
          *
          */
-        ProducerRecord<String, String> record = new ProducerRecord<String, String>(
-                "peng", "test", "hadoop");
+        ProducerRecord<String, String> record = new ProducerRecord<String, String>("peng", "test", "hadoop");
 
         /*
          * 步骤四：发送消息

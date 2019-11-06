@@ -58,7 +58,7 @@ public class OrderProducer {
         //步骤二
         JSONObject order = createRecord();
         ProducerRecord<String, String> record = new ProducerRecord<String, String>(
-                "testkaikeba", order.getString("userId"), order.toString());
+                "peng", order.getString("userId"), order.toString());
 
 
         producer.send(record, new Callback() {

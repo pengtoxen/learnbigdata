@@ -10,13 +10,16 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * @author Administrator
+ */
 public class ConsumerDemo {
 
-    public static KafkaConsumer<String, String> createConsumer() {
+    private static KafkaConsumer<String, String> createConsumer() {
         //步骤一：设置参数
         Properties props = new Properties();
         props.put("bootstrap.servers", "hadoop1:9092");
-        props.put("group.id", "testkaikeba");
+        props.put("group.id", "peng");
         props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
@@ -27,7 +30,8 @@ public class ConsumerDemo {
         props.put("session.timeout.ms", 10 * 1000);
 
 
-        props.put("max.poll.interval.ms", 30 * 1000); // 如果30秒才去执行下一次poll
+        // 如果30秒才去执行下一次poll
+        props.put("max.poll.interval.ms", 30 * 1000);
         // 如果说你的消费的吞吐量特别大，此时可以适当提高一些
         props.put("max.poll.records", 1000);
         // 不要去回收那个socket连接
@@ -37,7 +41,7 @@ public class ConsumerDemo {
         // 如果你每次要重启一下consumer的话，他一定会把一些数据重新消费一遍
         props.put("enable.auto.commit", "true");
         // 每次自动提交offset的一个时间间隔
-        props.put("auto.commit.ineterval.ms", "1000");
+        props.put("auto.commit.interval.ms", "1000");
         props.put("auto.offset.reset", "latest");
         //
         //步骤二：创建消费者
@@ -65,12 +69,13 @@ public class ConsumerDemo {
         KafkaConsumer<String, String> consumer = createConsumer();
 
         //步骤三：指定消费的主题
-        consumer.subscribe(Arrays.asList("testkaikeba"));
+        consumer.subscribe(Arrays.asList("peng"));
 
         try {
             while (true) {
                 //步骤四：不断的消费数据
-                ConsumerRecords<String, String> records = consumer.poll(3000); // 超时时间
+                // 超时时间
+                ConsumerRecords<String, String> records = consumer.poll(3000);
                 //步骤五：对消费到的数据，进行业务的处理。一次消费多条数据。
                 for (ConsumerRecord<String, String> record : records) {
                     JSONObject order = JSONObject.parseObject(record.value());
@@ -81,18 +86,16 @@ public class ConsumerDemo {
         } catch (Exception e) {
 
         }
-
-
     }
-
 
     public static class ConsumerTask implements Runnable {
         private JSONObject order;
 
-        public ConsumerTask(JSONObject order) {
+        ConsumerTask(JSONObject order) {
             this.order = order;
         }
 
+        @Override
         public void run() {
             System.out.println("做一些业务的处理：" + order.toJSONString());
         }
