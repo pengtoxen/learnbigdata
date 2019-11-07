@@ -1,4 +1,4 @@
-package com.peng.datafrommysql
+package com.peng.data_from_mysql
 
 import java.util.Properties
 

@@ -1,4 +1,4 @@
-package com.peng.customsource
+package com.peng.custom_source
 
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.streaming.{Seconds, StreamingContext}

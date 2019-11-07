@@ -1,4 +1,4 @@
-package com.peng.customsource
+package com.peng.custom_source
 
 import java.io.{BufferedReader, InputStreamReader}
 import java.net.Socket

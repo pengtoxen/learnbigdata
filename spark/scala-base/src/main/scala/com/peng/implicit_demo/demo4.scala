@@ -1,4 +1,4 @@
-package com.peng.implicitdemo
+package com.peng.implicit_demo
 
 //隐式参数转换
 object Company {

@@ -1,4 +1,4 @@
-package com.peng.implicitdemo
+package com.peng.implicit_demo
 
 //一个类隐式转换成具有相同方法的多个类
 class C

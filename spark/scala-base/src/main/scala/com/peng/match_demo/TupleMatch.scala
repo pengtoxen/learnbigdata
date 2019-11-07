@@ -1,4 +1,4 @@
-package com.peng.matchdemo
+package com.peng.match_demo
 
 object TupleMatch extends App {
 	//定义一个数组

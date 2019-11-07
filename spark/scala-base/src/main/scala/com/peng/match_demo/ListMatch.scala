@@ -1,4 +1,4 @@
-package com.peng.matchdemo
+package com.peng.match_demo
 
 object ListMatch extends App {
 	//定义一个数组

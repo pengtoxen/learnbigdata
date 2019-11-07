@@ -1,4 +1,4 @@
-package com.peng.implicitdemo
+package com.peng.implicit_demo
 
 import java.io.File
 import scala.io.Source

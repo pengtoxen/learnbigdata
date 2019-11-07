@@ -1,4 +1,4 @@
-package com.peng.hivesupport
+package com.peng.hive_support
 
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.api.java.UDF1

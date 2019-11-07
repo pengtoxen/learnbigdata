@@ -1,4 +1,4 @@
-package com.peng.foreachrdd;
+package com.peng.foreach_rdd;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 

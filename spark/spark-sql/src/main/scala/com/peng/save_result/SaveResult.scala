@@ -1,4 +1,4 @@
-package com.peng.saveresult
+package com.peng.save_result
 
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.{DataFrame, SparkSession}

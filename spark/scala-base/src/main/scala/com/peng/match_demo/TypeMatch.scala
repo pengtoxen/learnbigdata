@@ -1,4 +1,4 @@
-package com.peng.matchdemo
+package com.peng.match_demo
 
 import scala.util.Random
 

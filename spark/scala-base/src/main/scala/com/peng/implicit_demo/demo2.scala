@@ -1,4 +1,4 @@
-package com.peng.implicitdemo
+package com.peng.implicit_demo
 
 class Man(val name: String)
 
