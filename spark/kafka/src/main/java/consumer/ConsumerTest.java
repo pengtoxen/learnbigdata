@@ -64,7 +64,7 @@ public class ConsumerTest {
 
         //消费者订阅的topic, 可同时订阅多个
         //步骤三：指定消费的主题
-        consumer.subscribe(Arrays.asList("peng","peng2"));
+        consumer.subscribe(Arrays.asList("peng", "peng2"));
 
         try {
             while (true) {

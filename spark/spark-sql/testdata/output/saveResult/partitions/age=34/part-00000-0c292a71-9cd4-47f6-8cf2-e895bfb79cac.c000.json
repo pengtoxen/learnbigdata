@@ -1,3 +1,12 @@
-{"name":"Michael","salary":3000}
-{"name":"Jack","salary":3000}
-{"name":"Andy","salary":3500}
+{
+  "name": "Michael",
+  "salary": 3000
+}
+{
+  "name": "Jack",
+  "salary": 3000
+}
+{
+  "name": "Andy",
+  "salary": 3500
+}

@@ -1,7 +1,7 @@
 package com.peng.demo
 
-import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.rdd.RDD
+import org.apache.spark.{SparkConf, SparkContext}
 
 //TODO:利用spark实现点击流日志分析-----------UV
 object UV {

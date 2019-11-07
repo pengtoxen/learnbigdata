@@ -1,9 +1,7 @@
 package com.peng.hive_support
 
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.api.java.UDF1
-import org.apache.spark.sql.types.StringType
-import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.SparkSession
 
 /**
   * 自定义函数

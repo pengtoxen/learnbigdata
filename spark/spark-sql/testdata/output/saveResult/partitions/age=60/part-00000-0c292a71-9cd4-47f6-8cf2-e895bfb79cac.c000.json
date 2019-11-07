@@ -1,1 +1,4 @@
-{"name":"Tom","salary":4500}
+{
+  "name": "Tom",
+  "salary": 4500
+}

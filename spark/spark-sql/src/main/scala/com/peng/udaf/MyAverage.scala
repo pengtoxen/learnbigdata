@@ -2,7 +2,7 @@ package com.peng.udaf
 
 import org.apache.spark.sql.Row
 import org.apache.spark.sql.expressions.{MutableAggregationBuffer, UserDefinedAggregateFunction}
-import org.apache.spark.sql.types.{DataType, DoubleType, LongType, StructField, StructType}
+import org.apache.spark.sql.types._
 
 /**
   * 自定义聚合函数

@@ -3,8 +3,8 @@ package com.peng.data_to_hbase
 import java.util
 
 import org.apache.hadoop.conf.Configuration
-import org.apache.hadoop.hbase.{HBaseConfiguration, TableName}
 import org.apache.hadoop.hbase.client.{Connection, ConnectionFactory, Put, Table}
+import org.apache.hadoop.hbase.{HBaseConfiguration, TableName}
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 

@@ -22,13 +22,6 @@ class MyCustomReceiver(host: String, port: Int) extends Receiver[String](Storage
         //数据库里面读取数据
     }
 
-    def onStop() {
-        // There is nothing much to do as the thread calling receive()
-        // is designed to stop by itself isStopped() returns false
-
-        //关闭连接
-    }
-
     /** Create a socket connection and receive data until receiver is stopped */
     private def receive() {
         var socket: Socket = null
@@ -56,6 +49,13 @@ class MyCustomReceiver(host: String, port: Int) extends Receiver[String](Storage
             case t: Throwable =>
                 restart("Error receiving data", t)
         }
+    }
+
+    def onStop() {
+        // There is nothing much to do as the thread calling receive()
+        // is designed to stop by itself isStopped() returns false
+
+        //关闭连接
     }
 
 }
