@@ -3,7 +3,7 @@ package com.heima.base02.day05.code.demo01.exception;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-/*
+/**
     throws关键字:异常处理的第一种方式,交给别人处理
     作用:
         当方法内部抛出异常对象的时候,那么我们就必须处理这个异常对象
@@ -36,7 +36,7 @@ public class Demo05Throws {
         System.out.println("后续代码");
     }
 
-    /*
+    /**
         定义一个方法,对传递的文件路径进行合法性判断
         如果路径不是"c:\\a.txt",那么我们就抛出文件找不到异常对象,告知方法的调用者
         注意:

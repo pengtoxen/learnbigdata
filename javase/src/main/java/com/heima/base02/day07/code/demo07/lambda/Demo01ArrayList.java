@@ -2,7 +2,7 @@ package com.heima.base02.day07.code.demo07.lambda;
 
 import java.util.ArrayList;
 
-/*
+/**
     Lambda表达式:是可推导,可以省略
     凡是根据上下文推导出来的内容,都可以省略书写
     可以省略的内容:
