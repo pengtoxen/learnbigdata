@@ -3,6 +3,10 @@ package com.peng.partitioner
 import org.apache.spark.rdd.RDD
 import org.apache.spark.{SparkConf, SparkContext}
 
+/**
+  * 自定义分区
+  * 前提条件:产生shuffle
+  */
 object Partitioner extends App {
     //1.构建sparkConf
     val sparkConf: SparkConf = new SparkConf().setAppName("partitioner").setMaster("local[*]")

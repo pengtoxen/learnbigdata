@@ -43,17 +43,13 @@ object Data2MysqlForeachPartitions {
                     ps.setInt(3, line._3)
                     ps.execute()
                 })
-
             } catch {
                 case e: Exception => e.printStackTrace()
             } finally {
                 if (connection != null) {
                     connection.close()
                 }
-
             }
         })
-
-
     }
 }

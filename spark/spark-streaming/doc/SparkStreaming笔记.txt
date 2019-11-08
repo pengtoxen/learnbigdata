@@ -17,14 +17,14 @@ SparkStreaming：
 Flink:
 	是真正意义上的实时处理，可以来一条数据就处理一条数据。
 第二个要搞明白的东西：
-我们SparkStremaing是基于SparkCore
+我们SparkStreaming是基于SparkCore
 SparkStreaming运行起来以后，就针对RDD进行处理，所以我们会看到对以前RDD能使用的算子，对于DStream同样也可以使用。
 第三个要搞明白的东西：
-streaming程序获取到的数据源就是一个DStream,然后其实我们编程就是针对这个DSTream进行的操作。
+streaming程序获取到的数据源就是一个DStream,然后其实我们编程就是针对这个DStream进行的操作。
 第四个要搞明白的东西：
-大家会发现，无论是我给大家课件，或者是我上课演示的版本，或者是上课给大家看的SparkStremaing官网的版本，或者是我的虚拟机里面搭建的SparkStreaming的版本，可能都不一样，那这个会有影响吗？
+大家会发现，无论是我给大家课件，或者是我上课演示的版本，或者是上课给大家看的SparkStreaming官网的版本，或者是我的虚拟机里面搭建的SparkStreaming的版本，可能都不一样，那这个会有影响吗？
 一点都不影响。
-SparkStremaing到了Spark2.x以后，机会源码就没改过，所以你用那个版本无所谓，看哪个版本的官网也所谓，为什么呢？都是一模一样。
+SparkStreaming到了Spark2.x以后，机会源码就没改过，所以你用那个版本无所谓，看哪个版本的官网也所谓，为什么呢？都是一模一样。
 
 如果说非要给大家推荐一个Spark的版本，那么我推荐Spark2.3.3这个版本，如果你们公司要新建Spark集群，那么我推荐使用这个版本。
 这个版本是比较稳定的一个版本的。
@@ -100,18 +100,18 @@ SparkStreaming默认的持久化的级别是StorageLevel.MEMORY_AND_DISK_SER_2
 		RDD:
 			transform的操作：
 				map
-				mapMpartition(parttion)
+				mapPartition(partition)
 			action的操作：
 				foreach
-				foreachPartion( partition)
+				foreachPartition( partition)
 		DStream
 			transform的操作：
-				transform (rdd)->  mapMpartition
+				transform (rdd)->  mapPartition
 			action的操作：
-				foreachRDD (rdd)->  foreachPartion
+				foreachRDD (rdd)->  foreachPartition
 
 
-		dstream.foreachRDD { rdd =>
+		DStream.foreachRDD { rdd =>
 		  
 		  val connection = createNewConnection()  // executed at the driver. hadoop1. -> hadoop2
 		  //就需要序列化，但是Mysql的连接不支持序列化，所以这这个代码压根就不能运行

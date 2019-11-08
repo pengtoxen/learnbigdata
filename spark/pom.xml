@@ -33,6 +33,17 @@
         <module>kafka</module>
     </modules>
 
+    <dependencyManagement>
+        <!-- 统一处理冲突的包-->
+        <dependencies>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>4.1.18.Final</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <!-- 声明并引入公有的依赖 -->
     <dependencies>
         <dependency>
