@@ -27,18 +27,19 @@ object WordCountDriver {
 		//6.相同单词出现的1累加
 		val result: RDD[(String, Int)] = wordAndOne.reduceByKey((x, y) => x + y)
 
-        /**
-          * 通过调用sparkContext对象的broadcast方法把数据广播出去
-          * 1、不能将一个RDD使用广播变量广播出去
-          * 2、广播变量只能在Driver端定义，不能在Executor端定义
-          * 3、在Driver端可以修改广播变量的值，在Executor端无法修改广播变量的值
-          * 4、如果executor端用到了Driver的变量，如果不使用广播变量在Executor有多少task就有多少Driver端的变量副本
-          * 5、如果Executor端用到了Driver的变量，如果使用广播变量在每个Executor中只有一份Driver端的变量副本
-          */
+		/**
+		  * 通过调用sparkContext对象的broadcast方法把数据广播出去
+		  * 1、不能将一个RDD使用广播变量广播出去
+		  * 2、广播变量只能在Driver端定义，不能在Executor端定义
+		  * 3、在Driver端可以修改广播变量的值，在Executor端无法修改广播变量的值
+		  * 4、如果executor端用到了Driver的变量，如果不使用广播变量在Executor有多少task就有多少Driver端的变量副本
+		  * 5、如果Executor端用到了Driver的变量，如果使用广播变量在每个Executor中只有一份Driver端的变量副本
+		  */
+		//word在这里声明在driver端,会通过网络传输给worker
 		val word = "spark"
 		val broadcast = sc.broadcast(word)
 
-        //在executor中通过调用广播变量的value属性获取广播变量的值
+		//在executor中通过调用广播变量的value属性获取广播变量的值
 		val filterResult = result.filter(x => x._1.equals(broadcast.value))
 
 		//7.收集数据打印

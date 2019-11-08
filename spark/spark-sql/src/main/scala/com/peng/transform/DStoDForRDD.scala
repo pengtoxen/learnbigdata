@@ -9,7 +9,7 @@ object DStoDForRDD extends App {
     //创建SparkSession对象
     val spark: SparkSession = SparkSession.builder().config(sparkConf).getOrCreate()
     //构建数据源生成DataFrame
-    val jsonDS: Dataset[Person] = spark.read.json("./spark-sql/testdata/rawdata/saveResult/data.json").as[Person]
+    val jsonDS: Dataset[Person] = spark.read.json("spark-sql/testdata/rawdata/saveResult/data.json").as[Person]
 
     //隐式转换
     import spark.implicits._

@@ -28,7 +28,7 @@ object WordCountForeachRDD {
             val conn = DriverManager.getConnection("jdbc:mysql://hadoop1:3306/test", "root", "root")
             val statement = conn.prepareStatement(s"insert into wordcount(ts, word, count) values (?, ?, ?)")
             //statement 要从Driver通过网络发送过来
-            //序列化的事，statement不支持序列化。
+            //序列化的事，statement不支持序列化
             //connection object not serializable
             rdd.foreach { record =>
                 //executed at the worker(Executor)
