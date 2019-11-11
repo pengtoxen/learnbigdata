@@ -29,7 +29,7 @@ object RDDtoDSorDF extends App {
     //构建SparkContext对象
     val sparkContext = spark.sparkContext
     //构建数据源生成DataFrame
-    val dataRDD: RDD[String] = sparkContext.textFile("./spark-sql/testdata/rawdata/saveResult/data.text")
+    val dataRDD: RDD[String] = sparkContext.textFile("spark-sql/testdata/rawdata/saveResult/data.text")
     //隐式转换
     import spark.implicits._
 
