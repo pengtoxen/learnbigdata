@@ -25,7 +25,7 @@ public class TestCompress {
      */
     @Test
     public void deCompress() throws IOException {
-        String name = "F:\\learnbigdata\\hadoop\\rawdata\\Compression\\uncompression.avi.gz";
+        String name = "mapreduce/testdata/rawdata/Compression/uncompression.avi.gz";
         //1.获取输入流
         FileInputStream fis = new FileInputStream(name);
         //2.获取编码器
@@ -55,7 +55,7 @@ public class TestCompress {
      */
     @Test
     public void compress() throws Exception {
-        String name = "F:\\learnbigdata\\hadoop\\rawdata\\Compression\\uncompression.avi";
+        String name = "mapreduce/testdata/rawdata/Compression/uncompression.avi";
         String method = "org.apache.hadoop.io.compress.GzipCodec";
         //1.获取输入流
         FileInputStream fis = new FileInputStream(name);
