@@ -93,6 +93,8 @@ object WordCountForeachRDD {
             rdd.foreachPartition { partitionRecords =>
                 //使用连接池，我们连接就可以复用
                 //性能就更好了。
+                //一个executor里面可能有多个partition
+                //那么就可以复用连接池里面的连接
                 val conn = ConnectionPool.getConnection
                 val statement = conn.prepareStatement(s"insert into wordcount(ts, word, count) values (?, ?, ?)")
 
