@@ -1,5 +1,7 @@
 target/
 checkpoint/
+metastore_db/
+spark_warehouse/
 
 # Editor directories and files
 .idea
