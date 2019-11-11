@@ -6,3 +6,4 @@ spark_warehouse/
 # Editor directories and files
 .idea
 .iml
+derby.log
