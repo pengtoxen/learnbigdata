@@ -11,12 +11,12 @@ import java.util.Properties;
 /**
  * @author Administrator
  */
-public class ConsumerTest {
+public class OrderConsumer {
     public static void main(String[] args) {
         //步骤一：设置参数
         Properties props = new Properties();
-        //定义kakfa 服务的地址，不需要将所有broker指定上
-        props.put("bootstrap.servers", "hadoop1:9092");
+        //定义Kafka服务的地址，不需要将所有broker指定上
+        props.put("bootstrap.servers", "node1:9092,node2:9092,node3:9092");
         //制定consumer group
         props.put("group.id", "peng");
         //key的序列化类
@@ -64,7 +64,7 @@ public class ConsumerTest {
 
         //消费者订阅的topic, 可同时订阅多个
         //步骤三：指定消费的主题
-        consumer.subscribe(Arrays.asList("peng", "peng2"));
+        consumer.subscribe(Arrays.asList("peng"));
 
         try {
             while (true) {

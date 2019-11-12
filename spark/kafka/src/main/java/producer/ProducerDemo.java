@@ -19,11 +19,11 @@ public class ProducerDemo {
         Properties props = new Properties();
         //这个参数，目的就是为了获取kafka集群的元数据
         //我们写一台主机也行，写多个的话，更安全。
-        //大家注意到，我这儿使用的是主机名。原因是server.properties 的时候里面填进去的
+        //大家注意到，我这儿使用的是主机名。原因是server.properties的时候里面填进去的
         //就是主机名。所以这儿必须是主机名。既然是主机名的话，所以你必须要配置你的电脑的
         //hosts文件。
         //这个问题，很多同学都会遇到。
-        props.put("bootstrap.servers", "hadoop1:9092,hadoop2:9092,hadoop3:9092");
+        props.put("bootstrap.servers", "node1:9092,node2:9092,node3:9092");
         //设置序列化器 -》 kafka的数据是用的网络传输的，所以里面都是二进制的数据。
         //我们发送消息的时候，默认的情况下就是发送一个消息就可以了。，
         //但是你也可以给你的每条消息都指定一个key也是可以的。
@@ -49,12 +49,15 @@ public class ProducerDemo {
          * 如果参数是1：
          *  重要发送的消息能写到leader partition就算写入成功，然后服务端就返回响应就可以了
          *  默认就是用的这个参数
-         *  有可能会丢数据。
-         *  消息  -》 leader partition -> 响应消息 得到的就是发送成功 -》 用户是不是就认为发送成功了。
-         *  刚好这个leader partition宕机了。
+         *  有可能会丢数据
+         *  消息  -》 leader partition -> 响应消息 得到的就是发送成功
+         *  用户是不是就认为发送成功了
+         *
+         *  可能出现的情况:
+         *  在返回给客户端相应消息后,刚好这个leader partition宕机了,那么这条数据就丢了
          *
          * 如果参数是0：
-         *  消息只要发送出去了，那么就认为是成功的，不管了。
+         *  消息只要发送出去了，那么就认为是成功的，不管了
          *  我们可能允许丢数据，只是在处理一些不重要的日志，分析里面一些简单的数据
          *  不需要等到准确的数据。
          */
@@ -79,6 +82,7 @@ public class ProducerDemo {
          * 基本上我们不需要设置的。
          * 33554432 byte = 32M
          */
+
         props.put("buffer.memory", 33554432);
         /*
          * 批次的大小
@@ -91,6 +95,7 @@ public class ProducerDemo {
          * 这两个参数开发的时候需要去配置的。
          */
         props.put("batch.size", 323840);
+
         /*
          * 比如我们设置的一个批次的大小是32K。
          * 但是我们现在一个消息的大小是1k,现在这个批次里面已经有了
@@ -98,6 +103,7 @@ public class ProducerDemo {
          * 即使一个批次没满，无论如何到了这个时间都要把消息发送出去了。
          */
         props.put("linger.ms", 100);
+
         /*
          * 这个值，默认是1M
          * 代表的是生产者发送消息的时候，最大的一条信息（注意说的不是批次）
@@ -111,6 +117,7 @@ public class ProducerDemo {
          * 10 * 1024 * 1024
          */
         props.put("max.request.size", 1048576);
+
         /*
          * 消息发送出去了以后，多久了还是没接收到响应，那么就认为超时。
          * 如果发现自己公司，经常出现网络不稳定的情况

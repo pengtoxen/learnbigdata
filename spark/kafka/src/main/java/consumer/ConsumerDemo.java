@@ -40,10 +40,11 @@ public class ConsumerDemo {
         // 开启自动提交，他只会每隔一段时间去提交一次offset
         // 如果你每次要重启一下consumer的话，他一定会把一些数据重新消费一遍
         props.put("enable.auto.commit", "true");
+
         // 每次自动提交offset的一个时间间隔
         props.put("auto.commit.interval.ms", "1000");
         props.put("auto.offset.reset", "latest");
-        //
+
         //步骤二：创建消费者
         KafkaConsumer<String, String> consumer = new KafkaConsumer<String, String>(props);
         return consumer;

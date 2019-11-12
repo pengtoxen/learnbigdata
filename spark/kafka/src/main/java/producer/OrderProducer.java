@@ -17,7 +17,7 @@ public class OrderProducer {
     private static KafkaProducer<String, String> getProducer() {
         Properties props = new Properties();
 
-        props.put("bootstrap.servers", "hadoop1:9092,hadoop2:9092,hadoop3:9092");
+        props.put("bootstrap.servers", "node1:9092,node2:9092,node3:9092");
         props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
         props.put("acks", "-1");
@@ -57,14 +57,11 @@ public class OrderProducer {
         KafkaProducer<String, String> producer = getProducer();
         //步骤二
         JSONObject order = createRecord();
-        ProducerRecord<String, String> record = new ProducerRecord<String, String>(
-                "peng", order.getString("userId"), order.toString());
-
+        ProducerRecord<String, String> record = new ProducerRecord<String, String>("peng", order.getString("userId"), order.toString());
 
         producer.send(record, new Callback() {
             @Override
             public void onCompletion(RecordMetadata metadata, Exception exception) {
-
                 if (exception == null) {
                     System.out.println("消息发送成功");
                 } else {
@@ -74,7 +71,6 @@ public class OrderProducer {
                     System.out.println("做其他处理");
                 }
             }
-
         });
         Thread.sleep(100000);
         // 这是同步发送的模式 try
