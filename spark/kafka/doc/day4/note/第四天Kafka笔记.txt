@@ -1,0 +1,60 @@
+第四天Kafka知识
+Producer基础的案例
+
+1. Producer的小案例
+	电商系统，会员，凡是能登陆的人都是会员。
+	你消费了多少钱，那么就会给你累积多少积分。
+
+	比如，你消费了1000块钱，那么同时给你这个会员号累积1000积分。
+
+2. consumer的原理
+	在Kafka里面，kafka是不帮我们维护这个offset的，这个偏移量需要consumer
+	自己去维护
+	consumer这儿，kafka提供了两个参数
+      是否开启自动提交偏移量
+      每隔多久提交一次消费的offset
+
+		// 开启自动提交，他只会每隔一段时间去提交一次offset
+		// 如果你每次要重启一下consumer的话，他一定会把一些数据重新消费一遍
+		props.put("enable.auto.commit", "true");
+		// 每次自动提交offset的一个时间间隔
+		props.put("auto.commit.ineterval.ms", "1000");
+
+		比如我们消费者消费的topicA(p0,p1)
+			consumerA:
+					topicA_p0,10001(offset)
+					topicA_p1,10008(offset)
+		下一次启动的时候
+
+	偏移量的数据存到哪儿？
+			
+3. 写一个简单的consumer的基础的API
+4. consumer的核心参数
+5. Consumer小案例
+
+回头再去看第一天的课程里面，有几个地方没讲。（听起来会有点绕）
+1. 稀松索引
+2. ISR机制
+
+P0:
+	p0-leader  <-   P0-follower1 po-follower2
+      ISR:
+	 p0-leader 
+	 p0-follower1 -》 leader partition
+
+
+
+        po-follower2 -〉 
+副本什么样的情况下 会被剔除 ISR列表呢？
+如果一个follower 超过了10秒没有去跟leader partition
+去同步数据的话，那么这个follower就会被剔除ISR列表。
+
+什么样的情况下又可以重新加入。
+
+
+		
+
+
+3. HW，LEO的更新流程
+
+如果讲完以后当时如果似懂非懂也没事，下去以后再看一下视频，就明白了。
