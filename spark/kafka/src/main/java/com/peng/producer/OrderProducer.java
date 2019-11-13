@@ -1,4 +1,4 @@
-package producer;
+package com.peng.producer;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.kafka.clients.producer.Callback;
@@ -8,7 +8,11 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 
 import java.util.Properties;
 
+/**
+ * @author Administrator
+ */
 public class OrderProducer {
+
     /**
      * 创建生产者
      *

@@ -1,4 +1,4 @@
-package consumer;
+package com.peng.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
