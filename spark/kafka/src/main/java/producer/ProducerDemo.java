@@ -50,11 +50,12 @@ public class ProducerDemo {
          *  重要发送的消息能写到leader partition就算写入成功，然后服务端就返回响应就可以了
          *  默认就是用的这个参数
          *  有可能会丢数据
-         *  消息  -》 leader partition -> 响应消息 得到的就是发送成功
+         *  消息  -》 leader partition -> 响应消息 得到的是发送成功
          *  用户是不是就认为发送成功了
          *
          *  可能出现的情况:
-         *  在返回给客户端相应消息后,刚好这个leader partition宕机了,那么这条数据就丢了
+         *  在返回给客户端相应消息后,leader partition在同步的时候刚好这个leader partition宕机了
+         *  kafka就会选举follower成为新的leader partition,那么就丢失数据了
          *
          * 如果参数是0：
          *  消息只要发送出去了，那么就认为是成功的，不管了
