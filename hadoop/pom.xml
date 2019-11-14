@@ -19,6 +19,7 @@
     <modules>
         <module>hdfs</module>
         <module>mapreduce</module>
+        <module>tunning</module>
     </modules>
 
     <dependencies>
