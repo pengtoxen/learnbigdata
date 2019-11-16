@@ -7,6 +7,9 @@ import org.apache.flink.api.java.operators.DataSource;
 import org.apache.flink.api.java.tuple.Tuple2;
 import org.apache.flink.util.Collector;
 
+/**
+ * @author Administrator
+ */
 public class WordCountDriver {
     public static void main(String[] args) throws Exception {
         //步骤一：获取执行环境，程序入口
