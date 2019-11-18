@@ -1,5 +1,8 @@
 package com.peng.namenode_demo;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * HDFS管理元数据
  * 超高并发刷写磁盘
@@ -13,17 +16,13 @@ public class Runner {
 
     public static void main(String[] args) {
         FSEdit fs = new FSEdit();
+        ExecutorService executorService = Executors.newFixedThreadPool(100);
+        Task task = new Task(fs);
         //开启1000个线程跑任务
         for (int i = 0; i < 1000; i++) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //每个线程写1000条数据
-                    for (int j = 0; j < 1000; j++) {
-                        fs.logEdit("元数据");
-                    }
-                }
-            }).start();
+            executorService.submit(task);
         }
+        //运行完毕,关闭线程池
+        executorService.shutdown();
     }
 }
