@@ -1,13 +1,13 @@
 package com.peng.state;
 
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
-import org.apache.flink.api.common.state.ValueState;
-import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.api.common.state.ListState;
+import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.tuple.Tuple;
 import org.apache.flink.api.java.tuple.Tuple2;
-import org.apache.flink.api.java.tuple.Tuple3;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.shaded.guava18.com.google.common.collect.Lists;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.KeyedStream;
 import org.apache.flink.streaming.api.environment.LocalStreamEnvironment;
@@ -15,6 +15,7 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.Collector;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * IN:输入的数据类型
@@ -28,7 +29,7 @@ import java.util.ArrayList;
  *
  * @author Administrator
  */
-public class AverageWithValueState {
+public class AverageWithListState {
 
 
     public static void main(String[] args) throws Exception {
@@ -54,24 +55,23 @@ public class AverageWithValueState {
         //按key分组才会有keyedState
         KeyedStream<Tuple2<String, Long>, Tuple> keyedStream = dataStream.keyBy(0);
 
-        keyedStream.flatMap(new ValueStateImp()).print();
+        keyedStream.flatMap(new ListStateImp()).print();
 
-        env.execute("KeyedStateTask");
+        env.execute("AverageWithListState");
     }
 }
 
-class ValueStateImp extends RichFlatMapFunction<Tuple2<String, Long>, Tuple2<String, Double>> {
+class ListStateImp extends RichFlatMapFunction<Tuple2<String, Long>, Tuple2<String, Double>> {
 
     /**
      * 我们的数据源那儿的每个key都会有自己的一个ValueState
-     * Tuple2<String, Long, Long>
+     * Tuple2<String, Long>
      * String:key键
-     * Long:key键出现的次数
      * Long:value的和
-     *
+     * <p>
      * 不同key的数据是不会混乱的，因为每个key都有自己的state
      */
-    private ValueState<Tuple3<String, Long, Long>> countAndSum;
+    private ListState<Tuple2<String, Long>> listState;
 
     /**
      * 这个方法就只会执行一次，用来初始化的时候使用的
@@ -84,41 +84,47 @@ class ValueStateImp extends RichFlatMapFunction<Tuple2<String, Long>, Tuple2<Str
     public void open(Configuration parameters) throws Exception {
 
         //把状态注册一下，让flink帮我们管理状态
-        ValueStateDescriptor<Tuple3<String, Long, Long>> descriptor = new ValueStateDescriptor<>(
+        ListStateDescriptor<Tuple2<String, Long>> descriptor = new ListStateDescriptor<>(
                 //状态的名字
                 "average",
                 //状态存储的数据类型
-                Types.TUPLE(Types.STRING, Types.LONG, Types.LONG));
+                Types.TUPLE(Types.STRING, Types.LONG));
 
-        //把状态赋值给countAndSum
-        countAndSum = getRuntimeContext().getState(descriptor);
+        //把状态赋值给listState
+        listState = getRuntimeContext().getListState(descriptor);
     }
 
     @Override
     public void flatMap(Tuple2<String, Long> element, Collector<Tuple2<String, Double>> out) throws Exception {
-        //当前key出现的次数，和对应的value的总值
-        Tuple3<String, Long, Long> currentState = countAndSum.value();
-        //第一次进来currentState是null,赋初值
+
+        //listState是集合
+        Iterable<Tuple2<String, Long>> currentState = listState.get();
+
+        //第一次进来currentState是null,赋初值(就是空集合)
         if (currentState == null) {
-            currentState = Tuple3.of(element.f0, 0L, 0L);
+            listState.addAll(Collections.emptyList());
         }
 
-        //出现的key次数累加1
-        currentState.f1 += 1;
-        //key对应value累加值
-        currentState.f2 += element.f1;
+        //往集合添加数据
+        listState.add(Tuple2.of(element.f0, element.f1));
 
-        //更新一下状态
-        countAndSum.update(currentState);
+        //将listState转换为ArrayList,方便迭代计算
+        ArrayList<Tuple2<String, Long>> itemList = Lists.newArrayList(listState.get());
 
-        if (currentState.f1 >= 3) {
-            //计算平均值
-            double avg = (double) currentState.f2 / currentState.f1;
+        //数据超过3个,计算平均值
+        if (itemList.size() >= 3) {
+            long count = 0L;
+            long sum = 0L;
+            for (Tuple2<String, Long> ele : itemList) {
+                count++;
+                sum += ele.f1;
+            }
+            //平均值
+            double avg = (double) sum / count;
+            //输出到下游
             out.collect(Tuple2.of(element.f0, avg));
-            //计算完成后,清除历史状态
-            countAndSum.clear();
-        } else {
-            //<3次不做处理
+            //计算完成后,清空listState
+            listState.clear();
         }
     }
 }
