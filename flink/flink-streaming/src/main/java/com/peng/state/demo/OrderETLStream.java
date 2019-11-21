@@ -35,7 +35,8 @@ public class OrderETLStream {
         //两个流有先后顺序,不能用join
         keyByInfo1.connect(keyByInfo2)
                 .flatMap(new EnrichmentFunction())
-                .print();
+                .print()
+                .setParallelism(2);
 
         env.execute("OrderETLStream");
     }
