@@ -1,4 +1,4 @@
-package com.peng.state.demo;
+package com.peng.state.keyed_state.order_demo;
 
 /**
  * 订单1中的数据格式

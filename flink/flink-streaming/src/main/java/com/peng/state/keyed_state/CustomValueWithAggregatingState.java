@@ -1,4 +1,4 @@
-package com.peng.state;
+package com.peng.state.keyed_state;
 
 import org.apache.flink.api.common.functions.AggregateFunction;
 import org.apache.flink.api.common.functions.RichFlatMapFunction;
