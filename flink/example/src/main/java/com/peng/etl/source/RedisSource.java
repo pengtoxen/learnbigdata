@@ -11,10 +11,20 @@ import java.util.Map;
 
 /**
  * redis客户端执行下列命令,插入数据
+ * <p>
+ * 连接客户端
+ * redis-cli.exe -h 127.0.0.1 -p 6379
+ * <p>
+ * 插入数据
  * hset areas AREA_US US
  * hset areas AREA_CT TW,HK
  * hset areas AREA_AR PK,KW,SA
  * hset areas AREA_IN IN
+ * <p>
+ * 查看areas中的所有key和value
+ * HGETALL areas
+ * 查看areas中的所有key
+ * HKEYS areas
  * <p>
  * 自定义source,从redis中读取数据
  *
@@ -26,7 +36,7 @@ public class RedisSource implements SourceFunction<HashMap<String, String>> {
 
     private Jedis jedis = null;
 
-    private boolean isRunning = false;
+    private boolean isRunning = true;
 
     @Override
     public void run(SourceContext<HashMap<String, String>> sourceContext) throws Exception {

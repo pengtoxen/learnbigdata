@@ -82,7 +82,7 @@ public class DataClean {
 
         SingleOutputStreamOperator<String> etlData = kafkaStream.connect(redisStream)
                 .flatMap(new CoFlatMapFunction<String, HashMap<String, String>, String>() {
-                    
+
                     HashMap<String, String> areaMap = new HashMap<String, String>();
 
                     //里面处理的是kafka的数据
@@ -100,7 +100,7 @@ public class DataClean {
                         JSONArray data = jsonObject.getJSONArray("data");
                         for (int i = 0; i < data.size(); i++) {
                             JSONObject dataObject = data.getJSONObject(i);
-                            System.out.println("大区：" + area);
+                            //System.out.println("大区：" + area);
                             dataObject.put("dt", dt);
                             dataObject.put("area", area);
                             //下游获取到数据的时候，也就是一个json格式的数据
@@ -109,14 +109,18 @@ public class DataClean {
                     }
 
                     //里面处理的是redis里面的数据
+                    //设置broadcast后,kafka流有几个,就打印几个
+                    //不设置的话,只打印一个
                     @Override
                     public void flatMap2(HashMap<String, String> map, Collector<String> collector) throws Exception {
-                        System.out.println(map.toString());
+                        //System.out.println(map.toString());
                         areaMap = map;
                     }
                 });
 
-        //打印数据
+        //打印数据如下
+        //{"dt":"2019-11-25 16:39:07","area":"AREA_CT","score":0.1,"level":"A+","type":"s3"}
+        //{"dt":"2019-11-25 16:39:07","area":"AREA_CT","score":0.3,"level":"C","type":"s3"}
         etlData.print().setParallelism(1);
 
         /**

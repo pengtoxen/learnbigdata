@@ -30,7 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Properties;
 
 /**
- * ETL:对数据进行预处理
+ * 统计的过去的3秒不同类型,每个大区的有效视频数量
  * 报表：就是要计算一些指标
  *
  * @author Administrator

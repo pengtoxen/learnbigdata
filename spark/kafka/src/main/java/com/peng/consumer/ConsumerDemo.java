@@ -75,7 +75,8 @@ public class ConsumerDemo {
                 //步骤五：对消费到的数据，进行业务的处理。一次消费多条数据。
                 for (ConsumerRecord<String, String> record : records) {
                     JSONObject order = JSONObject.parseObject(record.value());
-                    System.out.println(order.toString() + " ,userId " + order.getString("userId"));
+                    System.out.println(order);
+                    //System.out.println(order.toString() + " ,userId " + order.getString("userId"));
                 }
             }
         } catch (Exception e) {
