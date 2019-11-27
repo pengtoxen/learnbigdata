@@ -1,4 +1,4 @@
-package com.peng.window.count;
+package com.peng.window.evictor;
 
 import com.peng.window.CustomSource;
 import org.apache.flink.api.common.functions.FlatMapFunction;
@@ -28,7 +28,7 @@ import java.util.Iterator;
  *
  * @author Administrator
  */
-public class CountWordCountByEvictor {
+public class WordCountByCustomEvictor {
 
     public static void main(String[] args) throws Exception {
 
@@ -49,6 +49,9 @@ public class CountWordCountByEvictor {
             }
         });
 
+        /**
+         * 每隔2条数据,计算最近的3条数据
+         */
         WindowedStream<Tuple2<String, Integer>, Tuple, GlobalWindow> keyedWindow = stream.keyBy(0)
                 .window(GlobalWindows.create())
                 .trigger(new MyCountTrigger(2))
@@ -59,7 +62,7 @@ public class CountWordCountByEvictor {
 
         wordCounts.print().setParallelism(1);
 
-        env.execute("Streaming WordCount");
+        env.execute("WordCountByCustomEvictor");
     }
 
 
@@ -72,8 +75,8 @@ public class CountWordCountByEvictor {
         private ReducingStateDescriptor<Long> stateDescriptor
                 = new ReducingStateDescriptor<Long>("count", new ReduceFunction<Long>() {
             @Override
-            public Long reduce(Long aLong, Long t1) throws Exception {
-                return aLong + t1;
+            public Long reduce(Long v1, Long v2) throws Exception {
+                return v1 + v2;
             }
         }, Long.class);
 
@@ -105,9 +108,12 @@ public class CountWordCountByEvictor {
             //count 累加 1
             count.add(1L);
             //如果当前 key 的 count 值等于 maxCount
+            //当前window有2条数据进来了,满足触发条件
+            //触发window计算(在计算之前,先要运行MyCountEvictor中的逻辑)
             if (count.get() == maxCount) {
                 count.clear();
-                //触发 window 计算，删除数据
+                //触发 window 计算
+                //这里并没有PURGE,清除数据
                 return TriggerResult.FIRE;
             }
             //否则，对 window 不做任何的处理
@@ -137,6 +143,7 @@ public class CountWordCountByEvictor {
     private static class MyCountEvictor implements Evictor<Tuple2<String, Integer>, GlobalWindow> {
 
         //window 的大小
+        //当前window中最多有windowCount条数据
         private long windowCount;
 
         MyCountEvictor(long windowCount) {
@@ -162,6 +169,9 @@ public class CountWordCountByEvictor {
                     iterator.next();
                     evictorCount++;
                     //如果删除的数量小于当前的 window 大小减去规定的 window 的大小，就需要删除当前的元素
+                    //删除进入当前window中超出windowCount条的数据
+                    //比如说,windowCount=3, 但是当前窗口已经有5条数据,那么5-3=2条数据要剔除掉,不纳入计算范围
+                    //之后才开始计算
                     if (evictorCount > size - windowCount) {
                         break;
                     } else {

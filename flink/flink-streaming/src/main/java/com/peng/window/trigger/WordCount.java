@@ -1,4 +1,4 @@
-package com.peng.window.global;
+package com.peng.window.trigger;
 
 import com.peng.window.CustomSource;
 import org.apache.flink.api.common.functions.FlatMapFunction;
@@ -11,7 +11,7 @@ import org.apache.flink.streaming.api.windowing.triggers.CountTrigger;
 import org.apache.flink.util.Collector;
 
 /**
- * 全局窗口,这个流是一个窗口
+ * 单词每出现三次统计一次
  *
  * @author Administrator
  */
@@ -38,8 +38,15 @@ public class WordCount {
 
 
         stream.keyBy(0)
-                //global窗口,把整个流当做窗口,所以这里不会触发计算
+                //global窗口,把整个流当做窗口
                 .window(GlobalWindows.create())
+                //触发器,当数据=3个的时候就触发计算,计算一次
+                //4> (hadoop,3)
+                //1> (hive,3)
+                //4> (hadoop,6)
+                //1> (hive,6)
+                //从输出结果可以看到,这里的单词计数是全局的,因为窗口是整个流
+                .trigger(CountTrigger.of(3))
                 .sum(1)
                 .print();
 

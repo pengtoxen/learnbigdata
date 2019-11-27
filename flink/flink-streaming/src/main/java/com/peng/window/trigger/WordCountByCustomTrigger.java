@@ -1,4 +1,4 @@
-package com.peng.window.count;
+package com.peng.window.trigger;
 
 import com.peng.window.CustomSource;
 import org.apache.flink.api.common.functions.FlatMapFunction;
@@ -20,10 +20,11 @@ import org.apache.flink.util.Collector;
 
 /**
  * 使用Trigger 自己实现一个类似CountWindow的效果
+ * 每隔3秒计算一次单词的数量
  *
  * @author Administrator
  */
-public class CountWordCountByTrigger {
+public class WordCountByCustomTrigger {
 
     public static void main(String[] args) throws Exception {
 
@@ -48,6 +49,12 @@ public class CountWordCountByTrigger {
                 //全局窗口
                 .window(GlobalWindows.create())
                 //自定义触发器
+                //(hadoop,3)
+                //(spark,3)
+                //(flink,3)
+                //(hadoop,3)
+                //(hive,3)
+                //每3条数据是一个窗口,计算的是当前窗口的数据,并不是全局的
                 .trigger(new MyCountTrigger(3));
 
 
@@ -61,7 +68,7 @@ public class CountWordCountByTrigger {
 
         wordCounts.print().setParallelism(1);
 
-        env.execute("CountWordCountByTrigger");
+        env.execute("WordCountByCustomTrigger");
     }
 
     /**
@@ -75,9 +82,17 @@ public class CountWordCountByTrigger {
         //用于存储每个 key 对应的 count 值
         private ReducingStateDescriptor<Long> stateDescriptor = new ReducingStateDescriptor<Long>("count", new ReduceFunction<Long>() {
 
+            /**
+             * keyed状态
+             * 实现累加效果
+             * @param v1
+             * @param v2
+             * @return
+             * @throws Exception
+             */
             @Override
-            public Long reduce(Long aLong, Long t1) throws Exception {
-                return aLong + t1;
+            public Long reduce(Long v1, Long v2) throws Exception {
+                return v1 + v2;
             }
 
         }, Long.class);
