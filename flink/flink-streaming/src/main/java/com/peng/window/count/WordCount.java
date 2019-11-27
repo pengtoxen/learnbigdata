@@ -36,7 +36,13 @@ public class WordCount {
 
 
         stream.keyBy(0)
-                .countWindow(3)
+                //每隔3条数据统计一次
+                //滚动窗口,不重叠
+                //.countWindow(3)
+
+                //每3条数据统计5条数据的数据
+                //滑动窗口,有重复
+                .countWindow(5, 3)
                 .sum(1)
                 .print();
 
