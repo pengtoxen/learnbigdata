@@ -20,6 +20,9 @@
         <module>hdfs</module>
         <module>mapreduce</module>
         <module>tunning</module>
+        <module>hive</module>
+        <module>flume</module>
+        <module>example</module>
     </modules>
 
     <dependencies>
