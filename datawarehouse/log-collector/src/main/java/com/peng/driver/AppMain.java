@@ -54,7 +54,6 @@ public class AppMain {
                     //应用启动
                     AppStart appStart = generateStart();
                     String jsonString = JSON.toJSONString(appStart);
-
                     //控制台打印
                     logger.info(jsonString);
                     break;

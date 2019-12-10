@@ -3,7 +3,7 @@
     <!--Logback主要用于在磁盘和控制台打印日志-->
     <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径 -->
     <!--value填写HDFS地址-->
-    <property name="LOG_HOME" value="/bigdata/weblog/"/>
+    <property name="LOG_HOME" value="/home/hadoop/bigdata/weblog"/>
 
     <!-- 控制台输出 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
