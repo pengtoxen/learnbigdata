@@ -15,7 +15,7 @@ import java.util.ArrayList;
             sout(变量名);
         }
  */
-public class Demo02Foreach {
+class Demo02Foreach {
     public static void main(String[] args) {
         demo02();
     }

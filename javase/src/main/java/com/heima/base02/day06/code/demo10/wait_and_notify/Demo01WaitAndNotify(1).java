@@ -16,7 +16,7 @@ package com.heima.base02.day06.code.demo10.wait_and_notify;
           唤醒在此对象监视器上等待的单个线程。
           会继续执行wait方法之后的代码
  */
-public class Demo01WaitAndNotify {
+class Demo01WaitAndNotify {
     public static void main(String[] args) {
         //创建锁对象,保证唯一
         Object obj = new Object();
