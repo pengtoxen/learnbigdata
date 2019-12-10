@@ -1,4 +1,5 @@
-package com.bigdata.flume.interceptor;
+package com.peng.interceptor;
+
 import org.apache.flume.Context;
 import org.apache.flume.Event;
 import org.apache.flume.interceptor.Interceptor;
@@ -8,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  ETL拦截器主要用于过来时间戳不合法和json数据不完整的日志
+ * ETL拦截器主要用于过来时间戳不合法和json数据不完整的日志
+ *
+ * @author Administrator
  */
 
 public class LogETLInterceptor implements Interceptor {
@@ -20,6 +23,7 @@ public class LogETLInterceptor implements Interceptor {
 
     /**
      * 拦截数据方法
+     *
      * @param event
      * @return
      */
@@ -32,13 +36,13 @@ public class LogETLInterceptor implements Interceptor {
 
         // 2 判断数据类型并向Header中赋值
         if (log.contains("start")) {
-             //启动日志规则判断---数据清洗
-            if (LogUtils.validateStart(log)){
+            //启动日志规则判断---数据清洗
+            if (LogUtils.validateStart(log)) {
                 return event;
             }
-        }else {
+        } else {
             //事件日志规则判断---数据清洗
-            if (LogUtils.validateEvent(log)){
+            if (LogUtils.validateEvent(log)) {
                 return event;
             }
         }
@@ -53,10 +57,10 @@ public class LogETLInterceptor implements Interceptor {
         ArrayList<Event> interceptors = new ArrayList<>();
 
         for (Event event : events) {
-            Event intercept1 = intercept(event);
+            Event interceptETL = intercept(event);
 
-            if (intercept1 != null){
-                interceptors.add(intercept1);
+            if (interceptETL != null) {
+                interceptors.add(interceptETL);
             }
         }
 
@@ -68,7 +72,7 @@ public class LogETLInterceptor implements Interceptor {
 
     }
 
-    public static class Builder implements Interceptor.Builder{
+    public static class Builder implements Interceptor.Builder {
 
         @Override
         public Interceptor build() {

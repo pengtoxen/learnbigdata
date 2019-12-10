@@ -1,4 +1,5 @@
-package com.bigdata.flume.interceptor;
+package com.peng.interceptor;
+
 import org.apache.flume.Context;
 import org.apache.flume.Event;
 import org.apache.flume.interceptor.Interceptor;
@@ -10,7 +11,9 @@ import java.util.Map;
 
 
 /**
- *  日志类型区分拦截器主要用于，将启动日志和事件日志区分开来
+ * 日志类型区分拦截器主要用于，将启动日志和事件日志区分开来
+ *
+ * @author Administrator
  */
 public class LogTypeInterceptor implements Interceptor {
     @Override
@@ -32,10 +35,10 @@ public class LogTypeInterceptor implements Interceptor {
         // 3 判断数据类型并向Header中赋值
         if (log.contains("start")) {
             //启动日志
-            headers.put("logType","log_start");
-        }else {
+            headers.put("logType", "log_start");
+        } else {
             //事件日志
-            headers.put("logType","log_event");
+            headers.put("logType", "log_event");
         }
 
         return event;
@@ -47,9 +50,11 @@ public class LogTypeInterceptor implements Interceptor {
         ArrayList<Event> interceptors = new ArrayList<>();
 
         for (Event event : events) {
-            Event intercept1 = intercept(event);
+            Event interceptETL = intercept(event);
 
-            interceptors.add(intercept1);
+            if (interceptETL != null) {
+                interceptors.add(interceptETL);
+            }
         }
 
         return interceptors;
@@ -60,7 +65,7 @@ public class LogTypeInterceptor implements Interceptor {
 
     }
 
-    public static class Builder implements  Interceptor.Builder{
+    public static class Builder implements Interceptor.Builder {
 
         @Override
         public Interceptor build() {

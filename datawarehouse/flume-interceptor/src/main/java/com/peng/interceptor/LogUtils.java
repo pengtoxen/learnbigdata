@@ -1,9 +1,12 @@
-package com.bigdata.flume.interceptor;
+package com.peng.interceptor;
+
 import org.apache.commons.lang.math.NumberUtils;
+
 /**
  * Flume日志过滤工具类
+ *
+ * @author Administrator
  */
-
 
 public class LogUtils {
 
@@ -15,17 +18,17 @@ public class LogUtils {
         String[] logContents = log.split("\\|");
 
         // 2 校验
-        if(logContents.length != 2){
+        if (logContents.length != 2) {
             return false;
         }
 
         //3 校验服务器时间
-        if (logContents[0].length()!=13 || !NumberUtils.isDigits(logContents[0])){
+        if (logContents[0].length() != 13 || !NumberUtils.isDigits(logContents[0])) {
             return false;
         }
 
         // 4 校验json
-        if (!logContents[1].trim().startsWith("{") || !logContents[1].trim().endsWith("}")){
+        if (!logContents[1].trim().startsWith("{") || !logContents[1].trim().endsWith("}")) {
             return false;
         }
 
@@ -35,12 +38,12 @@ public class LogUtils {
     public static boolean validateStart(String log) {
         // {"action":"1","ar":"MX","ba":"HTC","detail":"542","en":"start","entry":"2","extend1":"","g":"S3HQ7LKM@gmail.com","hw":"640*960","l":"en","la":"-43.4","ln":"-98.3","loading_time":"10","md":"HTC-5","mid":"993","nw":"WIFI","open_ad_type":"1","os":"8.2.1","sr":"D","sv":"V2.9.0","t":"1559551922019","uid":"993","vc":"0","vn":"1.1.5"}
 
-        if (log == null){
+        if (log == null) {
             return false;
         }
 
         // 校验json
-        if (!log.trim().startsWith("{") || !log.trim().endsWith("}")){
+        if (!log.trim().startsWith("{") || !log.trim().endsWith("}")) {
             return false;
         }
 
