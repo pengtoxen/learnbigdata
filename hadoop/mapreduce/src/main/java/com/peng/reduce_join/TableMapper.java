@@ -7,17 +7,24 @@ import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 import java.io.IOException;
 
-public class TableMapper extends Mapper<LongWritable, Text, Text, TableBean>{
+/**
+ * k.set(fields[1]);
+ * k.set(fields[0]);
+ * k是相同的,所以分发到同一个reducer
+ */
+public class TableMapper extends Mapper<LongWritable, Text, Text, TableBean> {
     Text k = new Text();
     TableBean tableBean = new TableBean();
+
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
-        //获取文件名
+        //获取数据分片文件名
         FileSplit split = (FileSplit) context.getInputSplit();
         String name = split.getPath().getName();
         //判断
         String line = value.toString();
-        if (name.startsWith("order")){
+        //order开头的文件
+        if (name.startsWith("order")) {
             String[] fields = line.split("\t");
             tableBean.setOrderId(fields[0]);
             tableBean.setPid(fields[1]);
@@ -26,7 +33,8 @@ public class TableMapper extends Mapper<LongWritable, Text, Text, TableBean>{
             tableBean.setFlag("0");
             k.set(fields[1]);
             context.write(k, tableBean);
-        }else {
+            //其他文件
+        } else {
             String[] fields = line.split("\t");
             tableBean.setOrderId("");
             tableBean.setPid(fields[0]);

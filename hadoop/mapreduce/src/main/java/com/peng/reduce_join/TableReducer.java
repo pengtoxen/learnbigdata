@@ -10,6 +10,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * values里面有两种类型的数据
+ * 一种是订单数据
+ * 一种是商品数据
+ */
 public class TableReducer extends Reducer<Text, TableBean, NullWritable, TableBean> {
     //1001  01  1   -> 订单表数据
     //01    小米  -> 商品表数据
@@ -41,6 +46,8 @@ public class TableReducer extends Reducer<Text, TableBean, NullWritable, TableBe
             }
         }
         for (TableBean orderbean : orderBeans){
+            //将pBean的name赋值给orderBean
+            //实现join的效果
             orderbean.setPname(pBean.getPname());
             context.write(NullWritable.get(),orderbean);
         }

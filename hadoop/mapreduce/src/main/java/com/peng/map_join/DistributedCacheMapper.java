@@ -17,6 +17,7 @@ public class DistributedCacheMapper extends Mapper<LongWritable, Text, Text, Nul
     Text k = new Text();
     HashMap<String, String> map = new HashMap<>();
     /**
+     * 执行一次,将pd表缓存起来
      * 先缓存pd表
      * @param context
      * @throws IOException
@@ -49,6 +50,9 @@ public class DistributedCacheMapper extends Mapper<LongWritable, Text, Text, Nul
         String line = value.toString();
         //通过pid获取pname
         String[] fields = line.split("\t");
+        //拿到一行的pid,去缓存中查找,有的话取出值
+        //没有不做操作
+        //相当于在mapper端实现了join的操作
         String pid = fields[1];
         String pname = map.get(pid);
         String str = line + "\t" + pname;

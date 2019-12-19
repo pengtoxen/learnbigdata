@@ -12,6 +12,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * mapjoin
+ * @author Administrator
+ */
 public class DistributedCacheDriver {
     public static void main(String[] args) throws IOException, URISyntaxException, ClassNotFoundException, InterruptedException {
         // 1 获取job信息
@@ -31,7 +35,7 @@ public class DistributedCacheDriver {
         FileInputFormat.setInputPaths(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
 
-        // 6 加载缓存数据
+        // 6 add缓存数据
         job.addCacheFile(new URI("file:///F:/input/inputPd/pd.txt"));
 
         // 7 map端join的逻辑不需要reduce阶段，设置reducetask数量为0
