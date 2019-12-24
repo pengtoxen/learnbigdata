@@ -23,6 +23,7 @@
         <module>hive</module>
         <module>flume</module>
         <module>example</module>
+        <module>hbase</module>
     </modules>
 
     <dependencies>
