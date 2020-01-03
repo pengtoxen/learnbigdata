@@ -4,7 +4,7 @@ import org.apache.spark.SparkConf
 import org.apache.spark.sql.SparkSession
 
 /**
-  * 自定义函数
+  * hive整合
   */
 object HiveSupport extends App {
     //1 创建SparkConf对象
