@@ -19,7 +19,8 @@
         <module>session</module>
         <module>page</module>
         <module>product</module>
-        <module>advertising</module>
+        <module>adver-stat</module>
+        <module>advertise</module>
     </modules>
 
 </project>

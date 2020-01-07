@@ -9,6 +9,7 @@
         <module>analyse</module>
         <module>commons</module>
         <module>mock</module>
+        <module>advers-stat</module>
     </modules>
     <packaging>pom</packaging>
 

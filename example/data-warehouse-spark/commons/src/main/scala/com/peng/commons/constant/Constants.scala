@@ -18,7 +18,7 @@ object Constants {
     val JDBC_USER = "jdbc.user"
     val JDBC_PASSWORD = "jdbc.password"
 
-
+    val KAFKA_BROKERS = "node1:9092,node2:9092,node3:9092"
     val KAFKA_TOPICS = "kafka.topics"
 
     /**

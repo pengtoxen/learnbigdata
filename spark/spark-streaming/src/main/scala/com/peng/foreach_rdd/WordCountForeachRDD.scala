@@ -45,7 +45,7 @@ object WordCountForeachRDD {
         ssc.start()
         ssc.stop(false)
 
-        //将结果保存到Mysql(二) 可以的。
+        //将结果保存到Mysql(二) 可以的
         wordCounts.foreachRDD { (rdd, time) =>
             //driver
             rdd.foreach { record =>
