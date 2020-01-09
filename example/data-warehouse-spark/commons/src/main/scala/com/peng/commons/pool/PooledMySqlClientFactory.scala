@@ -91,6 +91,7 @@ case class MySqlProxy(jdbcUrl: String, jdbcUser: String, jdbcPassword: String, c
         var rtn: Array[Int] = null
         var pstmt: PreparedStatement = null
         try {
+
             // 第一步：使用Connection对象，取消自动提交
             mysqlClient.setAutoCommit(false)
             pstmt = mysqlClient.prepareStatement(sql)
