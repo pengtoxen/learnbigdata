@@ -14,10 +14,13 @@ import org.apache.spark.streaming.{Seconds, StreamingContext}
 object WordCountByUpdateStateByKey {
 
     private val update = (values: Seq[Int], state: Option[Int]) => {
+
         //当前值
         val currentCount = values.sum
+
         //历史值
         val lastCount = state.getOrElse(0)
+
         //Scala里面最后一行代码就是返回值
         Some(currentCount + lastCount)
     }
@@ -40,13 +43,16 @@ object WordCountByUpdateStateByKey {
         conf.setAppName("word count")
 
         val ssc = new StreamingContext(conf, Seconds(1))
+
         //这儿要记得设置一个checkpoint目录
+        //checkpoint保存driver端的一些信息
         //建议这儿目录设置为HDFS的目录
         ssc.checkpoint("spark-streaming/testdata/checkpoint/wordcount")
 
         //步骤二：获取数据
         //DStream -> RDD RDD RDD RDD -> 数据流
         val dataDStream = ssc.socketTextStream("localhost", 9999, StorageLevel.MEMORY_AND_DISK_SER)
+
         //2. 数据的处理
         //步骤三 对数据进行处理
         val wordDStream = dataDStream.flatMap(_.split(","))

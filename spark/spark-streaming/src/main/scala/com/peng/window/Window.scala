@@ -12,6 +12,7 @@ import org.apache.spark.{SparkConf, SparkContext}
   */
 object Window {
     def main(args: Array[String]): Unit = {
+        
         //设置了日志的级别
         Logger.getLogger("org").setLevel(Level.ERROR)
 
@@ -24,10 +25,11 @@ object Window {
         val dataStream = ssc.socketTextStream("localhost", 9999)
 
         val wordAndOneDStream = dataStream.flatMap(_.split(",")).map((_, 1))
+        
         //代表每隔4秒 统计最近6秒的单词
         //6秒就是指window的大小
         //4秒就是指滑动的大小
-        //这儿的这两数，必须得是Batch interval的倍数。
+        //这儿的这两数,必须得是Batch interval的倍数.
         val result: DStream[(String, Int)] = wordAndOneDStream.reduceByKeyAndWindow(
             (x: Int, y: Int) => x + y,
             Seconds(6),

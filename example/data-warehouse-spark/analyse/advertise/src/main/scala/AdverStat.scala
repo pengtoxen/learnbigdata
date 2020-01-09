@@ -122,6 +122,12 @@ object AdverStat {
         // 每隔1分钟统计最近60分钟的数据
         val key2WindowDStream = key2TimeMinuteDStream.reduceByKeyAndWindow((a: Long, b: Long) => (a + b), Minutes(60), Minutes(1))
 
+        // RDD:
+        //  transform算子:(mapPartition)
+        //  action算子:(foreachPartition) 处理的是一个个partition
+        // DStream:
+        //  transform算子:(transform) 类似于 mapPartition
+        //  action算子:(foreachRDD) 类似于 foreachPartition 处理的是一个个rdd
         key2WindowDStream.foreachRDD {
             rdd =>
                 rdd.foreachPartition {

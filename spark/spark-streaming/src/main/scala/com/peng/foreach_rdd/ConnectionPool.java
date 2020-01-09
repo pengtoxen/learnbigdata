@@ -8,7 +8,6 @@ import java.sql.SQLException;
 /**
  * @author Administrator
  */
-@SuppressWarnings("ALL")
 public class ConnectionPool {
     private static ComboPooledDataSource dataSource = new ComboPooledDataSource();
 

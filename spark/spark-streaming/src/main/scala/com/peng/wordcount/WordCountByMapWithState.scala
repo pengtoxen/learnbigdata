@@ -31,6 +31,7 @@ object WordCountByMapWithState {
         conf.setAppName("word count")
 
         val ssc = new StreamingContext(conf, Seconds(1))
+
         //这儿要记得设置一个checkpoint目录
         //建议这儿目录设置为HDFS的目录
         ssc.checkpoint("spark-streaming/testdata/checkpoint/mapwithstate")
@@ -59,21 +60,26 @@ object WordCountByMapWithState {
           * Time, KeyType, Option[ValueType], State[StateType]
           * key:hadoop  当前的key
           * value:3  当前的key出现的次数
-          * currentState： 当前的这个key的历史的状态
+          * state： 当前的这个key的历史的状态
           */
         val stateSpec = StateSpec.function((currTime: Time, key: String, value: Option[Int], state: State[Int]) => {
+
             //3 + 4 = 7
             //计算当前值
             val currCount = value.getOrElse(0) + state.getOption().getOrElse(0)
+
             //更改一下历史值
             //timeout设置了10秒,在10秒之内更新历史值
-            //如果10秒之后则不更新
+            //如果10秒之后说明超时,则不更新
             if (!state.isTimingOut()) {
                 state.update(currCount)
             }
+
             //最后一行代码是返回值
             Some(key, currCount)
+
             //timeout: 当一个key超过这个时间没有接收到数据的时候，这个key以及对应的状态会被移除掉
+            //initialRDD初始值
         }).initialState(initialRDD).numPartitions(2).timeout(Seconds(10))
 
         val result = wordAndOneDStream.mapWithState(stateSpec)
@@ -87,7 +93,5 @@ object WordCountByMapWithState {
         ssc.start()
         ssc.awaitTermination()
         ssc.stop()
-
     }
-
 }
