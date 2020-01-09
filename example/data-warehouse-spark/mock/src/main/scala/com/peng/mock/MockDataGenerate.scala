@@ -1,6 +1,3 @@
-/*
- * Copyright (c) 2018. Peng Inc. All Rights Reserved.
- */
 import java.util.UUID
 
 import com.peng.commons.model.{ProductInfo, UserInfo, UserVisitAction}
@@ -78,8 +75,10 @@ object MockDataGenerate {
     private def mockUserVisitActionData(): Array[UserVisitAction] = {
 
         val searchKeywords = Array("华为手机", "联想笔记本", "小龙虾", "卫生纸", "吸尘器", "Lamer", "机器学习", "苹果", "洗面奶", "保温杯")
+
         // yyyy-MM-dd
         val date = DateUtils.getTodayDate()
+
         // 关注四个行为：搜索、点击、下单、支付
         val actions = Array("search", "click", "order", "pay")
         val random = new Random()
@@ -88,15 +87,20 @@ object MockDataGenerate {
         // 一共100个用户（有重复）
         for (i <- 0 to 100) {
             val userid = random.nextInt(100)
+
             // 每个用户产生10个session
             for (j <- 0 to 10) {
+
                 // 不可变的，全局的，独一无二的128bit长度的标识符，用于标识一个session，体现一次会话产生的sessionId是独一无二的
                 val sessionid = UUID.randomUUID().toString().replace("-", "")
+
                 // 在yyyy-MM-dd后面添加一个随机的小时时间（0-23）
                 val baseActionTime = date + " " + random.nextInt(23)
+
                 // 每个(userid + sessionid)生成0-100条用户访问数据
                 for (k <- 0 to random.nextInt(100)) {
                     val pageid = random.nextInt(10)
+
                     // 在yyyy-MM-dd HH后面添加一个随机的分钟时间和秒时间
                     val actionTime = baseActionTime + ":" + StringUtils.fulfuill(String.valueOf(random.nextInt(59))) + ":" + StringUtils.fulfuill(String.valueOf(random.nextInt(59)))
                     var searchKeyword: String = null
@@ -107,6 +111,7 @@ object MockDataGenerate {
                     var payCategoryIds: String = null
                     var payProductIds: String = null
                     val cityid = random.nextInt(10).toLong
+
                     // 随机确定用户在当前session中的行为
                     val action = actions(random.nextInt(4))
 

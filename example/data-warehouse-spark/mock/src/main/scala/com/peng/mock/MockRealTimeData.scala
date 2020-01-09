@@ -1,9 +1,5 @@
 package com.peng.mock
 
-/*
- * Copyright (c) 2018. Peng Inc. All Rights Reserved.
- */
-
 import java.util.Properties
 
 import com.peng.commons.conf.ConfigurationManager
@@ -45,6 +41,7 @@ object MockRealTimeData {
     def generateMockData(): Array[String] = {
         val array = ArrayBuffer[String]()
         val random = new Random()
+
         // 模拟实时数据：
         // timestamp province city userid adid
         for (i <- 0 to 50) {
@@ -65,6 +62,7 @@ object MockRealTimeData {
 
         // 创建配置对象
         val prop = new Properties()
+
         // 添加配置
         prop.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, broker)
         prop.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")

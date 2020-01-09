@@ -11,6 +11,7 @@ object ConfigurationManager {
 
   // 创建用于初始化配置生成器实例的参数对象
   private val params = new Parameters()
+
   // FileBasedConfigurationBuilder:产生一个传入的类的实例对象
   // FileBasedConfiguration:融合FileBased与Configuration的接口
   // PropertiesConfiguration:从一个或者多个文件读取配置的标准配置加载器
