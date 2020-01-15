@@ -20,6 +20,7 @@ object MockRealTimeData {
         val kafkaProducer = createKafkaProducer(broker)
 
         while (true) {
+
             // 随机产生实时数据并通过Kafka生产者发送到Kafka集群中
             for (item <- generateMockData()) {
                 kafkaProducer.send(new ProducerRecord[String, String](topic, item))

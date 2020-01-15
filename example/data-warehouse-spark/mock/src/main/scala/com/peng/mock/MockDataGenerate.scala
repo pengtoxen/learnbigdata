@@ -8,7 +8,6 @@ import org.apache.spark.sql.{DataFrame, SparkSession}
 import scala.collection.mutable.ArrayBuffer
 import scala.util.Random
 
-
 /**
   * 模拟的数据
   * date：是当前日期

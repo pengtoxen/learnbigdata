@@ -13,7 +13,7 @@ object WordCount {
 
 		//步骤一:获取配置信息
 		val conf = new SparkConf().setAppName("WordCount").setMaster("local[3]")
-		conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+		conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
 		val ssc = new StreamingContext(conf, Seconds(5))
 
 		val brokers = "node1:9092"
