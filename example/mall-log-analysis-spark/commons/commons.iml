@@ -12,7 +12,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="R User Library" level="project" />
-    <orderEntry type="library" name="R Skeletons" level="application" />
     <orderEntry type="library" name="scala-sdk-2.11.8" level="application" />
     <orderEntry type="library" name="Maven: net.sf.json-lib:json-lib:jdk15:2.4" level="project" />
     <orderEntry type="library" name="Maven: commons-collections:commons-collections:3.2.1" level="project" />
