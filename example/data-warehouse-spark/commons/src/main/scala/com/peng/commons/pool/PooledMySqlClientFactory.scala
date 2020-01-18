@@ -178,4 +178,3 @@ object CreateMySqlPool {
         genericObjectPool
     }
 }
-
