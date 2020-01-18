@@ -20,7 +20,7 @@ public class KafkaConsumer {
     private static FileSystem fs = null;
     private static FSDataOutputStream outputStream = null;
     private static Path writePath = null;
-    private static String hdfsBasicPath = "hdfs://hadoop-senior01.itguigu.com:8020/user/peng/test/";
+    private static String hdfsBasicPath = "hdfs://node1/user/peng/test/";
 
     public static void main(String[] args) {
 
@@ -92,10 +92,12 @@ public class KafkaConsumer {
         }
 
         while (it.hasNext()) {
+
             // 收集两分钟的数据后更换目录
             if (System.currentTimeMillis() - lastTime > 6000) {
                 try {
                     outputStream.close();
+
                     // 重新获取时间，更新目录
                     Long currentTime = System.currentTimeMillis();
                     String newPath = getTotalPath(currentTime);
@@ -147,22 +149,27 @@ public class KafkaConsumer {
     }
 
     private static String getDirectoryFromDate(String date) {
+
         // yyyyMM-dd
         String[] directories = date.split("-");
+
         // yyyyMM/dd/
         String directory = directories[0] + "/" + directories[1];
         return directory;
     }
 
     private static String getFileName(String date) {
+
         // HHmm
         String[] dateSplit = date.split("-");
+
         // HHmm
         String fileName = dateSplit[2];
         return fileName;
     }
 
     private static String getTotalPath(Long lastTime) {
+
         // 时间格式转换（yyyyMM-dd-HHmm）
         String formatDate = timeTransform(lastTime);
         // 提取目录（yyyyMM/dd/）

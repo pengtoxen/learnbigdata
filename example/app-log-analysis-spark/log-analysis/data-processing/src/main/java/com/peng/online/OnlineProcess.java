@@ -50,12 +50,16 @@ public class OnlineProcess {
             public JavaStreamingContext call() throws Exception {
 
                 SparkConf sparkConf = new SparkConf().setAppName("online").setMaster("local[*]");
+
                 // 配置sparkConf优雅的停止
                 sparkConf.set("spark.streaming.stopGracefullyOnShutdown", "true");
+
                 // 配置Spark Streaming每秒钟从kafka分区消费的最大速率
                 sparkConf.set("spark.streaming.kafka.maxRatePerPartition", "100");
+
                 // 指定Spark Streaming的序列化方式为Kryo方式
                 sparkConf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer");
+
                 // 指定Kryo序列化方式的注册器
                 sparkConf.set("spark.kryo.registrator", "com.peng.registrator.MyKryoRegistrator");
 
@@ -68,8 +72,10 @@ public class OnlineProcess {
 
                 /*  获取kafka相关的所有配置参数 */
                 final String kafkaBrokers = serverProperties.getProperty("kafka.broker.list");
+
                 //  topic: xx1,xx2,xx3.....
                 final String kafkaTopics = serverProperties.getProperty("kafka.topic");
+
                 // xx1,xx2,..   ->  [xx1, xx2, ....]
                 Set<String> kafkaTopicSet = new HashSet<>(Arrays.asList(kafkaTopics.split(",")));
                 final String groupId = serverProperties.getProperty("kafka.groupId");
