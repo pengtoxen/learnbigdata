@@ -1,34 +1,33 @@
 package com.peng.model;
 
-public class UserCityStatModel extends BaseModel
-{
-  private String userId;
-  private String city;
+public class UserCityStatModel extends BaseModel {
+    private String userId;
+    private String city;
 
-  public Long getNum() {
-    return num;
-  }
+    public Long getNum() {
+        return num;
+    }
 
-  public void setNum(Long num) {
-    this.num = num;
-  }
+    public void setNum(Long num) {
+        this.num = num;
+    }
 
-  private Long num;
+    private Long num;
 
-  public String getCity() {
-    return city;
-  }
+    public String getCity() {
+        return city;
+    }
 
-  public void setCity(String city) {
-    this.city = city;
-  }
+    public void setCity(String city) {
+        this.city = city;
+    }
 
-  public void setUserId(String userId) {
-    this.userId = userId;
-  }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
-  public String getUserId() {
-    return userId;
-  }
+    public String getUserId() {
+        return userId;
+    }
 
 }
